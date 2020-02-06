@@ -145,33 +145,42 @@ public
   processor implementation ATMEGA328.impl extends ATMEGA328p.impl
    end ATMEGA328.impl;
    
-  processor ATMEGA2560 extends ATMEGA328p
+  processor ATMEGA2560 extends Processors::Generic_CPU
   	features
-  	PA0 : in out event port;
-   	PA1 : in out event port;
-   	PA2 : in out event port;
+ 
    	PA3 : in out event port;
    	PA4 : in out event port;
    	PA5 : in out event port;
    	PA6 : in out event port;
    	PA7 : in out event port;
-  	PA8 : in out event port;
-  	PA9 : in out event port;
-  	PA10: in out event port;
 
-	PB8 : in out event port;
-	PB9 : in out event port;
-  	PB10: in out event port;
-	  	
-	PC7 : in out event port;
-	PC8 : in out event port;
-	PC9 : in out event port;
-  	PC10: in out event port;
+	PB0 : in out event port;
+    PB1 : in out event port;
+    PB2 : in out event port;
+    PB3 : in out event port;
+    PB4 : in out event port;
+    PB5 : in out event port;
+    PB6 : in out event port;
+    PB7 : in out event port;
 
-	PD8 : in out event port;
-	PD9 : in out event port;
-  	PD10: in out event port;
+	PC0 : in out event port;
+    PC1 : in out event port;
+    PC2 : in out event port;
+    PC3 : in out event port;
+    PC4 : in out event port;
+    PC5 : in out event port;
+    PC6 : in out event port;
+    PC7 : in out event port;    
 
+	PD0 : in out event port;
+    PD1 : in out event port;
+    PD2 : in out event port;
+    PD3 : in out event port;
+    PD4 : in out event port;
+    PD5 : in out event port;
+    PD6 : in out event port;
+    PD7 : in out event port;    
+	  		  	
   	PE0 : in out event port;
    	PE1 : in out event port;
    	PE2 : in out event port;
@@ -180,10 +189,7 @@ public
    	PE5 : in out event port;
    	PE6 : in out event port;
    	PE7 : in out event port;
-  	PE8 : in out event port;
-  	PE9 : in out event port;
-  	PE10: in out event port;
-
+  
 	PF0 : in out event port;
    	PF1 : in out event port;
    	PF2 : in out event port;
@@ -191,29 +197,22 @@ public
    	PF4 : in out event port;
    	PF5 : in out event port;
    	PF6 : in out event port;
-   	PF7 : in out event port;
-  	PF8 : in out event port;
-  	PF9 : in out event port;
-  	PF10: in out event port;
-
+   	PF7 : in out event port;  
+  
 	PG0 : in out event port;
    	PG1 : in out event port;
-   	PG2 : in out event port;
+   	PG2 : in out event port;   	
    	PG3 : in out event port;
    	PG4 : in out event port;
    	PG5 : in out event port;
-   	PG6 : in out event port;
-   	PG7 : in out event port;
-  	PG8 : in out event port;
-  	PG9 : in out event port;
-  	PG10: in out event port;
-
-
-    GND : in event port;
-    VCC : in event port;
-    AREF : in event port;
-    AVCC : in event port;		
-  		
+	
+    GND   : in event port;
+    VCC   : in event port;
+    AREF  : in event port;
+    AVCC  : in event port;		
+  	RESET : in event port;	
+  	XTAL1 : in event port;
+  	XTAL2 : out event port;	
   		
   properties
   	Data_Sheet::UUID
