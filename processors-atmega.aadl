@@ -145,6 +145,8 @@ public
   processor implementation ATMEGA328.impl extends ATMEGA328p.impl
    end ATMEGA328.impl;
    
+   
+   
   processor ATMEGA2560 extends Processors::Generic_CPU
   	features
  
@@ -218,7 +220,36 @@ public
   	Data_Sheet::UUID
   		=> "https://ww1.microchip.com/downloads/en/devicedoc/atmel-2549-8-bit-avr-microcontroller-atmega640-1280-1281-2560-2561_datasheet.pdf";
   	
+  	Deployment::Execution_Platform   	   => Native;
+    Processor_Properties::Processor_Family => AVR;
+    Processor_Properties::Endianess        => Little_Endian;
+    Processor_Properties::Word_Length      => 8 bits;
+    Processor_Properties::FPU_Present      => False;
+    Thread_Limit => 1;  	
+    Processor_Properties::Processor_Frequency => 16 Mhz;
+    
   end ATMEGA2560; 
+  
+ processor implementation ATMEGA2560.impl
+  subcomponents 
+    -- ATMEGA have three memory areas, one for code, two for data.
+
+    Flash_Memory : memory Memories::Flash_Memory.impl
+    {ARINC653_Extended::Memory_Kind => text;};
+
+    SRAM         : memory Memories::SRAM.impl
+    {ARINC653_Extended::Memory_Kind => bss;};
+
+    EEPROM       : memory Memories::EEPROM.impl
+    {ARINC653_Extended::Memory_Kind => bss;};
+    
+  properties
+    Memory_Size =>  268_435_456 Bytes applies to Flash_Memory;
+    Memory_Size =>  8_192 Bytes applies to SRAM;
+    Memory_Size =>  4_096 Bytes applies to EEPROM;
+    
+  end ATMEGA2560.impl;
+  
 
 
 end Processors::ATMEGA;
