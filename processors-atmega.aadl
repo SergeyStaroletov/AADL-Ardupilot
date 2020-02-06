@@ -207,7 +207,43 @@ public
    	PG3 : in out event port;
    	PG4 : in out event port;
    	PG5 : in out event port;
-	
+   	
+   	PH0 : in out event port;
+   	PH1 : in out event port;
+   	PH2 : in out event port;   	
+   	PH3 : in out event port;
+   	PH4 : in out event port;
+   	PH5 : in out event port;
+   	PH6 : in out event port;
+   	PH7 : in out event port;
+   	
+	PK0 : in out event port;
+   	PK1 : in out event port;
+   	PK2 : in out event port;   	
+   	PK3 : in out event port;
+   	PK4 : in out event port;
+   	PK5 : in out event port;
+   	PK6 : in out event port;	
+   	PK7 : in out event port;	
+    
+    PL0 : in out event port;
+   	PL1 : in out event port;
+   	PL2 : in out event port;   	
+   	PL3 : in out event port;
+   	PL4 : in out event port;
+   	PL5 : in out event port;
+   	PL6 : in out event port;	
+   	PL7 : in out event port;	
+    
+    PJ0 : in out event port;
+   	PJ1 : in out event port;
+   	PJ2 : in out event port;   	
+   	PJ3 : in out event port;
+   	PJ4 : in out event port;
+   	PJ5 : in out event port;
+   	PJ6 : in out event port;	
+   	PJ7 : in out event port;	
+    
     GND   : in event port;
     VCC   : in event port;
     AREF  : in event port;

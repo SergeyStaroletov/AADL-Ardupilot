@@ -1,5 +1,5 @@
--- This package models Ardupilot2.7 Board
--- Documentation source http://code.google.com/p/ardupilot/wiki/ArduPilot
+-- This package models Ardupilot2.6 Board
+-- updated by Sergey Staroletov
 
 package Boards::Ardupilot
 public
@@ -11,10 +11,64 @@ with deployment;
 with devices::SN74LS157D;
 with devices::spi;
 
+-- devices -> will be in different files
+ device FrskyTelemetry  --uart
+  features
+    TX : out event port;
+    RX : in event port;  
+    VCC : in event port;
+    GND : in event port;
+  end FrskyTelemetry;
+
+device BarometerMS5611 extends devices::spi::spi_pins
+	features 
+	VCC : in event port;
+	GND : in event port;
+end BarometerMS5611;
+
+device AccelerometerMPU6000 extends devices::spi::spi_pins
+	features 
+	VCC : in event port;
+	GND : in event port;
+end AccelerometerMPU6000;
+
+
+ device GPS
+  features
+    TX : out event port;
+    RX : in event port;  
+    VCC : in event port;
+    GND : in event port;
+  end GPS;
+
+ device Com2USB --uart and usb
+  features
+    TX : out event port;
+    RX : in event port;  
+    DataP : in event port;
+    DataM : out event port;
+    VCC : in out event port;
+    GND : in out event port;
+  end Com2USB;
+
+device i2c_pins
+	features
+	SDA : in out event port;
+ 	SCL : in out event port;
+end i2c_pins;
+
+device  MagnetometerMC5843 extends i2c_pins
+	features 
+	VCC : in event port;
+    GND : in event port;
+end MagnetometerMC5843;
+
+
+
 system Ardupilot
 	features
-	SPort	: in out event port;
-	GPSport	: in out event port;
+	--SPort	: in out event port; --??
+	--GPSport	: in out event port; --??
 	XY_port	: in event port;
 	Z_port	: in event port;
 	Bvolt	: in event port;
@@ -37,50 +91,56 @@ system Ardupilot
 	RBFF	: in event port;
 	VccLed	: out event port;
 
-
-
 	Properties
 	Data_Sheet::UUID =>
-	"http://code.google.com/p/ardupilot/wiki/HardwareDiagram";
+	"https://ardupilot.org/copter/docs/common-apm25-and-26-overview.html";
 
 end Ardupilot;
 
 system implementation Ardupilot.impl
 	Subcomponents
-	ATM328			: processor Processors::ATMEGA::ATMEGA328.impl
+	ATM2560			: processor Processors::ATMEGA::ATMEGA2560.impl
 	{
 	Deployment::Execution_Platform => Native;
     Scheduling_Protocol => (RMS);
-    Thread_Limit        => 4;
+    Thread_Limit        => 1;
     };
 	AT45			: processor Processors::ATtiny::ATtiny45.impl;
 	Multiplexer		: device devices::SN74LS157D::SN74LS157D.impl;
-	SPI5			: device devices::spi::spi_pins;
-	SPI6			: device devices::spi::spi_pins;
+	SPI0			: device devices::spi::spi_pins;
+	SPI3			: device devices::spi::spi_pins;
+	--addition
+	FrskyTelemetry		: device FrskyTelemetry;
+	MagnetometerMC5843	: device MagnetometerMC5843;
+	BarometerMS5611 	: device BarometerMS5611;
+	AccelerometerMPU6000: device AccelerometerMPU6000;
+	USB					: device Com2USB;
+	GPS					: device GPS;
+	
 	connections
 	-- See http://code.google.com/p/ardupilot/wiki/HardwareDiagram for more details
 	-- for this mapping
 
 		-- ATM328 interface
-	C1 : port SPort    <-> ATM328.PC6;
-	C2 : port SPort		-> ATM328.PD0;
-	C3 : port ATM328.PD1-> SPort;
-	C4 : port ATM328.PD0-> GPSport;
-	C5 : port GPSport	-> ATM328.PD1;
-	C6 : port ATM328.PD7-> GPSport;
-	C7 : port IN5V     -> ATM328.PD7;
-	C8 : port XY_port	-> ATM328.PC0;
-	C9 : port XY_port	-> ATM328.PC1;
-	C10: port Z_port	-> ATM328.PC2;
-	C11: port SI_Bv		-> ATM328.PC4;
-	C12: port Bvolt		-> ATM328.PC5;
-	C13: port Pres		-> ATM328.PC3;
-	C14: port IN3		-> ATM328.PD2;
-	C15: port IN2		-> ATM328.PD3;
-	C16: port ATM328.PB5-> YLed;
-	C17: port ATM328.PB5-> BLed;
-	C18: port RBFF		-> ATM328.PD6;
-	C19: port IN1		-> ATM328.PD2;
+--	C1 : port SPort    <-> ATM2560.PC6;
+--	C2 : port SPort		-> ATM2560.PD0;
+--	C3 : port ATM2560.PD1-> SPort;
+--	C4 : port ATM2560.PD0-> GPSport;
+--	C5 : port GPSport	-> ATM2560.PD1;
+--	C6 : port ATM2560.PD7-> GPSport;
+	C7 : port IN5V     -> ATM2560.PD7;
+	C8 : port XY_port	-> ATM2560.PC0;
+	C9 : port XY_port	-> ATM2560.PC1;
+	C10: port Z_port	-> ATM2560.PC2;
+	C11: port SI_Bv		-> ATM2560.PC4;
+	C12: port Bvolt		-> ATM2560.PC5;
+	C13: port Pres		-> ATM2560.PC3;
+	C14: port IN3		-> ATM2560.PD2;
+	C15: port IN2		-> ATM2560.PD3;
+	C16: port ATM2560.PB5-> YLed;
+	C17: port ATM2560.PB5-> BLed;
+	C18: port RBFF		-> ATM2560.PD6;
+	C19: port IN1		-> ATM2560.PD2;
 
 	-- Multiplexer interface
 
@@ -97,26 +157,57 @@ system implementation Ardupilot.impl
 
 	--Mmultiplexer / ATM328 interface
 
-	L1 : port ATM328.PB1	-> Multiplexer.B1;
-	L2 : port ATM328.PB2	-> Multiplexer.B2;
-	L3 : port AT45.PB1		-> ATM328.PD4;
-	L4 : port AT45.PB3		-> ATM328.PD5;
+	L1 : port ATM2560.PB1	-> Multiplexer.B1;
+	L2 : port ATM2560.PB2	-> Multiplexer.B2;
+	L3 : port AT45.PB1		-> ATM2560.PD4;
+	L4 : port AT45.PB3		-> ATM2560.PD5;
 
 	X1 : port CTRL		-> AT45.PB2; 			-- AT45 iterface
 	X2 : port AT45.PB0 	-> Multiplexer.Ab_B; 	-- Mux / AT45
-	X3 : port CTRL 		-> SPI6.SCLK;			--
+	X3 : port CTRL 		-> SPI3.SCLK;			--
 
 	-- interface SPI5=JP5 / ATM3258
-	A1 : port ATM328.PB4 -> SPI5.MISO;
-	A2 : port ATM328.PB5 -> SPI5.SCLK;
-	A3 : port ATM328.PC6 -> SPI5.RST;
-	A4 : port SPI5.MOSI	 -> ATM328.PB3;
+	A1 : port ATM2560.PB4 -> SPI0.MISO;
+	A2 : port ATM2560.PB5 -> SPI0.SCLK;
+	A3 : port ATM2560.PC6 -> SPI0.RST;
+	A4 : port SPI0.MOSI	 -> ATM2560.PB3;
 
 	-- interface SPI6=JP6 / AT45
-	A6 : port AT45.PB2 -> SPI6.SCLK;
-	A7 : port AT45.PB1 -> SPI6.MISO;
+	A6 : port AT45.PB2 -> SPI3.SCLK;
+	A7 : port AT45.PB1 -> SPI3.MISO;
 --	A8 : port AT45.PB2 -> SPI6.SCLK;
-	A9 : port SPI6.MOSI -> AT45.PB0;
+	A9 : port SPI3.MOSI -> AT45.PB0;
+
+	--by sergey
+	
+	--console
+	S1 : port ATM2560.PE1 -> USB.RX;
+	S2 : port USB.TX -> ATM2560.PE0;
+	
+	--gps
+	S3: port ATM2560.PD4 -> GPS.RX;
+	S4: port GPS.TX -> ATM2560.PD3;
+	
+	--telemetry
+	S5: port ATM2560.PH1 -> FrskyTelemetry.RX;
+	S6: port FrskyTelemetry.TX -> ATM2560.PH0;
+	
+	--mag
+	S7: port ATM2560.PD1 -> MagnetometerMC5843.SDA;
+	S8: port ATM2560.PD0 -> MagnetometerMC5843.SCL;
+	
+	--bar
+	S9: port BarometerMS5611.MOSI -> SPI0.MISO;
+	S10: port SPI0.MOSI -> BarometerMS5611.MISO;
+	S11: port BarometerMS5611.SCLK -> SPI0.SCLK;
+	S12: port ATM2560.PG1 -> BarometerMS5611.SS;
+
+	--accel
+	S13: port AccelerometerMPU6000.MOSI -> SPI0.MISO;
+	S14: port SPI0.MOSI -> AccelerometerMPU6000.MISO;
+	S15: port AccelerometerMPU6000.SCLK -> SPI0.SCLK;
+	S16: port ATM2560.PB0 -> AccelerometerMPU6000.SS;
+	
 
 	-- GPS power switch and battery attenuator are not modeled
 end Ardupilot.impl;
