@@ -17,190 +17,192 @@ package ardupilot_software
 
 public
 
-with poklib;
+	with poklib;
 
 -----------
 --  GPS  --
 -----------
+	subprogram spg_gps_simulation extends poklib::spg_c
+		features
+			latitude: out parameter poklib::float;
+			longitude: out parameter poklib::float;
+			altitude: out parameter poklib::integer;
+		properties
+			Source_Name => "gps_simulation";
+			Source_Text => ("../../../gps.o");
+	end spg_gps_simulation;
 
-subprogram spg_gps_simulation extends poklib::spg_c
-features
-   latitude    : out parameter poklib::float;
-   longitude   : out parameter poklib::float;
-   altitude    : out parameter poklib::integer;
-properties
-   Source_Name => "gps_simulation";
-   Source_Text      => ("../../../gps.o");
-end spg_gps_simulation;
+	thread thr_gps_simulation extends poklib::thr_periodic
+		features
+			latitude: out data port poklib::float;
+			longitude: out data port poklib::float;
+			altitude: out data port poklib::integer;
+	end thr_gps_simulation;
 
+	thread implementation thr_gps_simulation.i
+		calls
+			call1: {
+				pspg: subprogram spg_gps_simulation;
+			};
+		connections
+			p1: parameter pspg.latitude -> latitude;
+			p2: parameter pspg.longitude -> longitude;
+			p3: parameter pspg.altitude -> altitude;
+	end thr_gps_simulation.i;
 
-thread thr_gps_simulation extends poklib::thr_periodic
-features
-   latitude    :  out data port poklib::float;
-   longitude   :  out data port poklib::float;
-   altitude    :  out data port poklib::integer;
-end thr_gps_simulation;
+	process process_gps
+		features
+			latitude: out data port poklib::float;
+			longitude: out data port poklib::float;
+			altitude: out data port poklib::integer;
+	end process_gps;
 
-thread implementation thr_gps_simulation.i
-calls 
-   call1 : { pspg : subprogram spg_gps_simulation;};
-connections
-   p1: parameter pspg.latitude    -> latitude;
-   p2: parameter pspg.longitude   -> longitude;
-   p3: parameter pspg.altitude    -> altitude;
-end thr_gps_simulation.i;
-
-process process_gps
-features
-   latitude    :  out data port poklib::float;
-   longitude   :  out data port poklib::float;
-   altitude    :  out data port poklib::integer;
-end process_gps;
-
-process implementation process_gps.i
-subcomponents
-   thr : thread thr_gps_simulation.i;
-connections
- p1:  port thr.latitude    -> latitude;
- p2:  port thr.longitude   -> longitude;
- p3:  port thr.altitude    -> altitude;
-end process_gps.i;
+	process implementation process_gps.i
+		subcomponents
+			thr: thread thr_gps_simulation.i;
+		connections
+			p1: port thr.latitude -> latitude;
+			p2: port thr.longitude -> longitude;
+			p3: port thr.altitude -> altitude;
+	end process_gps.i;
 
 -------------------------
 --  Flight Management  --
 -------------------------
+	subprogram spg_flt_mgmt_simulation extends poklib::spg_c
+		features
+			altitude: in parameter poklib::integer;
+			latitude: in parameter poklib::float;
+			longitude: in parameter poklib::float;
+			speed: out parameter poklib::integer;
+			angle: out parameter poklib::integer;
+		properties
+			Source_Name => "flt_mgmt_simulation";
+			Source_Text => ("../../../flt-mgmt.o");
+	end spg_flt_mgmt_simulation;
 
-subprogram spg_flt_mgmt_simulation extends poklib::spg_c
-features
-   altitude    : in parameter poklib::integer;
-   latitude    : in parameter poklib::float;
-   longitude   : in parameter poklib::float;
-   speed       : out parameter poklib::integer;
-   angle       : out parameter poklib::integer;
-properties
-   Source_Name => "flt_mgmt_simulation";
-   Source_Text      => ("../../../flt-mgmt.o");
-end spg_flt_mgmt_simulation;
+	subprogram spg_flt_mgmt_init extends poklib::spg_c
+		properties
+			Source_Name => "flt_mgmt_init";
+			Source_Text => ("../../../flt-mgmt.o");
+	end spg_flt_mgmt_init;
 
-subprogram spg_flt_mgmt_init extends poklib::spg_c
-properties
-   Source_Name => "flt_mgmt_init";
-   Source_Text      => ("../../../flt-mgmt.o");
-end spg_flt_mgmt_init;
+	thread thr_mgmt extends poklib::thr_periodic
+		features
+			altitude: in data port poklib::integer;
+			latitude: in data port poklib::float;
+			longitude: in data port poklib::float;
+			speed: out data port poklib::integer;
+			angle: out data port poklib::integer;
+		properties
+			Initialize_Entrypoint => classifier (ardupilot_software::spg_flt_mgmt_init);
+	end thr_mgmt;
 
+	thread implementation thr_mgmt.i
+		calls
+			call1: {
+				pspg: subprogram spg_flt_mgmt_simulation;
+			};
+		connections
+			c1: parameter altitude -> pspg.altitude;
+			c2: parameter latitude -> pspg.latitude;
+			c3: parameter longitude -> pspg.longitude;
+			c4: parameter pspg.speed -> speed;
+			c5: parameter pspg.angle -> angle;
+	end thr_mgmt.i;
 
-thread thr_mgmt extends poklib::thr_periodic
-features
-   altitude    : in data port poklib::integer;
-   latitude    : in data port poklib::float;
-   longitude   : in data port poklib::float;
-   speed       : out data port poklib::integer;
-   angle       : out data port poklib::integer;
-properties
-   Initialize_Entrypoint => classifier (ardupilot_software::spg_flt_mgmt_init);
-end thr_mgmt;
- 
-thread implementation thr_mgmt.i
-calls 
-   call1 : { pspg : subprogram spg_flt_mgmt_simulation;};
-connections
-   c1: parameter altitude   -> pspg.altitude;
-   c2: parameter latitude   -> pspg.latitude;
-   c3: parameter longitude  -> pspg.longitude;
-   c4: parameter pspg.speed -> speed;
-   c5: parameter pspg.angle -> angle;
-end thr_mgmt.i;
+	process process_mgmt
+		features
+			altitude: in data port poklib::integer;
+			latitude: in data port poklib::float;
+			longitude: in data port poklib::float;
+			speed: out data port poklib::integer;
+			angle: out data port poklib::integer;
+	end process_mgmt;
 
-process process_mgmt
-features
-   altitude    : in data port poklib::integer;
-   latitude    : in data port poklib::float;
-   longitude   : in data port poklib::float;
-   speed       : out data port poklib::integer;
-   angle       : out data port poklib::integer;
-end process_mgmt;
-
-process implementation process_mgmt.i
-subcomponents
-   thr : thread thr_mgmt.i;
-connections
-  p1: port altitude     -> thr.altitude;
-  p2: port latitude     -> thr.latitude;
-  p3: port longitude    -> thr.longitude;
-  p4: port thr.speed    -> speed;
-  p5: port thr.angle    -> angle;
-end process_mgmt.i;
+	process implementation process_mgmt.i
+		subcomponents
+			thr: thread thr_mgmt.i;
+		connections
+			p1: port altitude -> thr.altitude;
+			p2: port latitude -> thr.latitude;
+			p3: port longitude -> thr.longitude;
+			p4: port thr.speed -> speed;
+			p5: port thr.angle -> angle;
+	end process_mgmt.i;
 
 ----------------
 --  Throttle  --
 ----------------
+	subprogram spg_throttle_simulation extends poklib::spg_c
+		features
+			speed: in parameter poklib::integer;
+		properties
+			Source_Name => "throttle_simulation";
+			Source_Text => ("../../../throttle.o");
+	end spg_throttle_simulation;
 
-subprogram spg_throttle_simulation extends poklib::spg_c
-features
-   speed : in parameter poklib::integer;
-properties
-   Source_Name => "throttle_simulation";
-   Source_Text      => ("../../../throttle.o");
-end spg_throttle_simulation;
+	thread thr_throttle_simulation extends poklib::thr_periodic
+		features
+			speed: in data port poklib::integer;
+	end thr_throttle_simulation;
 
-thread thr_throttle_simulation extends poklib::thr_periodic
-features
-   speed : in data port poklib::integer;
-end thr_throttle_simulation;
+	thread implementation thr_throttle_simulation.i
+		calls
+			call1: {
+				pspg: subprogram spg_throttle_simulation;
+			};
+		connections
+			p1: parameter speed -> pspg.speed;
+	end thr_throttle_simulation.i;
 
-thread implementation thr_throttle_simulation.i
-calls 
-   call1 : { pspg : subprogram spg_throttle_simulation;};
-connections
- p1:  parameter speed -> pspg.speed;
-end thr_throttle_simulation.i;
+	process process_throttle
+		features
+			speed: in data port poklib::integer;
+	end process_throttle;
 
-process process_throttle
-features
-   speed : in data port poklib::integer;
-end process_throttle;
-
-process implementation process_throttle.i
-subcomponents
-   thr : thread thr_throttle_simulation.i;
-connections
-   p1: port speed -> thr.speed;
-end process_throttle.i;
+	process implementation process_throttle.i
+		subcomponents
+			thr: thread thr_throttle_simulation.i;
+		connections
+			p1: port speed -> thr.speed;
+	end process_throttle.i;
 
 -----------
 --  YAW  --
 -----------
+	subprogram spg_yaw_simulation extends poklib::spg_c
+		features
+			angle: in parameter poklib::integer;
+		properties
+			Source_Name => "yaw_simulation";
+			Source_Text => ("../../../yaw.o");
+	end spg_yaw_simulation;
 
-subprogram spg_yaw_simulation extends poklib::spg_c
-features
-   angle : in parameter poklib::integer;
-properties
-   Source_Name => "yaw_simulation";
-   Source_Text      => ("../../../yaw.o");
-end spg_yaw_simulation;
+	thread thr_yaw_simulation extends poklib::thr_periodic
+		features
+			angle: in data port poklib::integer;
+	end thr_yaw_simulation;
 
-thread thr_yaw_simulation extends poklib::thr_periodic
-features
-   angle : in data port poklib::integer;
-end thr_yaw_simulation;
+	thread implementation thr_yaw_simulation.i
+		calls
+			call1: {
+				pspg: subprogram spg_yaw_simulation;
+			};
+		connections
+			p1: parameter angle -> pspg.angle;
+	end thr_yaw_simulation.i;
 
-thread implementation thr_yaw_simulation.i
-calls 
-   call1 : { pspg : subprogram spg_yaw_simulation;};
-connections
-  p1: parameter angle -> pspg.angle;
-end thr_yaw_simulation.i;
+	process process_yaw
+		features
+			angle: in data port poklib::integer;
+	end process_yaw;
 
-process process_yaw
-features
-   angle : in data port poklib::integer;
-end process_yaw;
-
-process implementation process_yaw.i
-subcomponents
-   thr : thread thr_yaw_simulation.i;
-connections
-   p1: port angle -> thr.angle;
-end process_yaw.i;
+	process implementation process_yaw.i
+		subcomponents
+			thr: thread thr_yaw_simulation.i;
+		connections
+			p1: port angle -> thr.angle;
+	end process_yaw.i;
 
 end ardupilot_software;

@@ -2,39 +2,38 @@
 package devices::SN74LS157D
 public
 
-with Data_Sheet;
-with Electricity_Properties;
+	with Data_Sheet;
+	with Electricity_Properties;
 
-device SN74LS157D
-features 
-	A1 : in event data port;
-	B1 : in event data port;
-	A2 : in event data port;
-	B2 : in event data port;
-	A3 : in event data port;
-	B3 : in event data port;
-	A4 : in event data port;
-	B4 : in event data port;
-	
-	Y1 : out event data port;
-	Y2 : out event data port;
-	Y3 : out event data port;
-	Y4 : out event data port;
-	
-	Ab_B: in out event data port;
-	Gb	: in out event data port;
-Properties 
-	Data_Sheet::UUID => 
-	"http://pdf1.alldatasheet.com/datasheet-pdf/view/170857/TI/SN74LS157D.html";
-end SN74LS157D;
+	device SN74LS157D
+		features
+			A1: in event data port;
+			B1: in event data port;
+			A2: in event data port;
+			B2: in event data port;
+			A3: in event data port;
+			B3: in event data port;
+			A4: in event data port;
+			B4: in event data port;
 
-device implementation SN74LS157D.impl 
-properties 
-	Electricity_Properties::Core_Voltage => 5.25 v; 
-	Electricity_Properties::VIH_min	=> 2.0 v;
-	Electricity_Properties::VIL_max => 0.8 v;
-	Electricity_Properties::VOH_min => 2.4 v;
-	Electricity_Properties::VOL_max => 0.4 v;
-end SN74LS157D.impl;
+			Y1: out event data port;
+			Y2: out event data port;
+			Y3: out event data port;
+			Y4: out event data port;
+
+			Ab_B: in out event data port;
+			Gb: in out event data port;
+		Properties
+			Data_Sheet::UUID => "http://pdf1.alldatasheet.com/datasheet-pdf/view/170857/TI/SN74LS157D.html";
+	end SN74LS157D;
+
+	device implementation SN74LS157D.impl
+		properties
+			Electricity_Properties::Core_Voltage => 5.25v;
+			Electricity_Properties::VIH_min => 2.0v;
+			Electricity_Properties::VIL_max => 0.8v;
+			Electricity_Properties::VOH_min => 2.4v;
+			Electricity_Properties::VOL_max => 0.4v;
+	end SN74LS157D.impl;
 
 end devices::SN74LS157D;

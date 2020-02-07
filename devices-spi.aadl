@@ -1,13 +1,13 @@
 package Devices::SPI
 public
 
-  device SPI_Pins
-  features
-    MISO : in     data port; -- Master Input, Slave Output
-    MOSI :    out data port; -- Master Output, Slave Input 
-    SCLK : in out data port; -- Serial Clock
-    SS   : in out event port; -- Slave select
-    RST  : in	  event port; -- Reset
-  end SPI_Pins;
+	device SPI_Pins
+		features
+			MISO: in data port; -- Master Input, Slave Output
+			MOSI: out data port; -- Master Output, Slave Input 
+			SCLK: in out data port; -- Serial Clock
+			SS: in out event port; -- Slave select
+			RST: in event port; -- Reset
+	end SPI_Pins;
 
 end Devices::SPI;
