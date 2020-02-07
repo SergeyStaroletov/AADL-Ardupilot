@@ -7,22 +7,22 @@ with Electricity_Properties;
 
 device SN74LS157D
 features 
-	A1 : in event port;
-	B1 : in event port;
-	A2 : in event port;
-	B2 : in event port;
-	A3 : in event port;
-	B3 : in event port;
-	A4 : in event port;
-	B4 : in event port;
+	A1 : in event data port;
+	B1 : in event data port;
+	A2 : in event data port;
+	B2 : in event data port;
+	A3 : in event data port;
+	B3 : in event data port;
+	A4 : in event data port;
+	B4 : in event data port;
 	
-	Y1 : out event port;
-	Y2 : out event port;
-	Y3 : out event port;
-	Y4 : out event port;
+	Y1 : out event data port;
+	Y2 : out event data port;
+	Y3 : out event data port;
+	Y4 : out event data port;
 	
-	Ab_B: in out event port;
-	Gb	: in out event port;
+	Ab_B: in out event data port;
+	Gb	: in out event data port;
 Properties 
 	Data_Sheet::UUID => 
 	"http://pdf1.alldatasheet.com/datasheet-pdf/view/170857/TI/SN74LS157D.html";

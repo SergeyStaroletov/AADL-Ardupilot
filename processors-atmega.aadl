@@ -1,77 +1,75 @@
 --  This package defines some processors from the ATMEGA family of
 --  processor by AVR. For more details, see
 --  http://www.atmel.com/products/avr/
-
 package Processors::ATMEGA
 public
-  with Data_Sheet, Memories, Deployment, Processor_Properties;
-  with Processors, ARINC653_Extended;
+	with Data_Sheet, Memories, Deployment, Processor_Properties;
+	with Processors, ARINC653_Extended;
 
-  -------------
-  -- ATMEGA8 --
-  -------------
+	-------------
+	-- ATMEGA8 --
+	-------------
+	processor ATMEGA8 extends Processors::Generic_CPU
+		--  Here is the view of the pins of a typical ATMEGA chip:
+		--  see http://www.atmel.com/dyn/resources/prod_documents/8271S.pdf
+		--
+		--                             +-\/-+
+		--      (PCIN1T14/RESET) PC6  1|    |28  PC5  (ADC5/SCL/PCINT13)
+		--         (PCINT16/RXD) PD0  2|    |27  PC4  (ADC4/SDA/PCINT12)
+		--         (PCINT17/TXD) PD1  3|    |26  PC3  (ADC3/PCINT11)
+		--        (PCINT18/INT0) PD2  4|    |25  PC2  (ADC2/PCINT10)
+		--   (PCINT19/OC2B/INT1) PD3  5|    |24  PC1  (ADC1/PCINT9)
+		--      (PCINT20/XCK/T0) PD4  6|    |23  PC0  (ADC0/PCINT8)
+		--                       VCC  7|    |22  GND
+		--                       GND  8|    |21  AREF
+		--  (PCINT6/XTAL1/TOSC1) PB6  9|    |20  AVCC
+		--  (PCINT7/XTAL2/TOSC2) PB7 10|    |19  PB5  (SCK/PCINT5)
+		--     (PCINT21/OC0B/T1) PD5 11|    |18  PB4  (MISO/PCINT4)
+		--   (PCINT22/OC0A/AIN0) PD6 12|    |17  PB3  (MOSI/OC2A/PCINT3)
+		--        (PCINT23/AIN1) PD7 13|    |16  PB2  (SS/OC1B/PCINT2)
+		--    (PCINT0/CLKO/ICP1) PB0 14|    |15  PB1  (OC1A/PCINT1)
+		--                             +----+
+		--
+		features
+			PB0: in out event port;
+			PB1: in out event port;
+			PB2: in out event port;
+			PB3: in out event port;
+			PB4: in out event port;
+			PB5: in out event port;
+			PB6: in out event port;
+			PB7: in out event port;
 
-  processor ATMEGA8 extends Processors::Generic_CPU
-    --  Here is the view of the pins of a typical ATMEGA chip:
-    --  see http://www.atmel.com/dyn/resources/prod_documents/8271S.pdf
-    --
-    --                             +-\/-+
-    --      (PCIN1T14/RESET) PC6  1|    |28  PC5  (ADC5/SCL/PCINT13)
-    --         (PCINT16/RXD) PD0  2|    |27  PC4  (ADC4/SDA/PCINT12)
-    --         (PCINT17/TXD) PD1  3|    |26  PC3  (ADC3/PCINT11)
-    --        (PCINT18/INT0) PD2  4|    |25  PC2  (ADC2/PCINT10)
-    --   (PCINT19/OC2B/INT1) PD3  5|    |24  PC1  (ADC1/PCINT9)
-    --      (PCINT20/XCK/T0) PD4  6|    |23  PC0  (ADC0/PCINT8)
-    --                       VCC  7|    |22  GND
-    --                       GND  8|    |21  AREF
-    --  (PCINT6/XTAL1/TOSC1) PB6  9|    |20  AVCC
-    --  (PCINT7/XTAL2/TOSC2) PB7 10|    |19  PB5  (SCK/PCINT5)
-    --     (PCINT21/OC0B/T1) PD5 11|    |18  PB4  (MISO/PCINT4)
-    --   (PCINT22/OC0A/AIN0) PD6 12|    |17  PB3  (MOSI/OC2A/PCINT3)
-    --        (PCINT23/AIN1) PD7 13|    |16  PB2  (SS/OC1B/PCINT2)
-    --    (PCINT0/CLKO/ICP1) PB0 14|    |15  PB1  (OC1A/PCINT1)
-    --                             +----+
-    --
-  features
-    PB0 : in out event port;
-    PB1 : in out event port;
-    PB2 : in out event port;
-    PB3 : in out event port;
-    PB4 : in out event port;
-    PB5 : in out event port;
-    PB6 : in out event port;
-    PB7 : in out event port;
+			PC0: in out event port;
+			PC1: in out event port;
+			PC2: in out event port;
+			PC3: in out event port;
+			PC4: in out event port;
+			PC5: in out event port;
+			PC6: in out event port;
 
-    PC0 : in out event port;
-    PC1 : in out event port;
-    PC2 : in out event port;
-    PC3 : in out event port;
-    PC4 : in out event port;
-    PC5 : in out event port;
-    PC6 : in out event port;
+			PD0: in out event port;
+			PD1: in out event port;
+			PD2: in out event port;
+			PD3: in out event port;
+			PD4: in out event port;
+			PD5: in out event port;
+			PD6: in out event port;
+			PD7: in out event port;
 
-    PD0 : in out event port;
-    PD1 : in out event port;
-    PD2 : in out event port;
-    PD3 : in out event port;
-    PD4 : in out event port;
-    PD5 : in out event port;
-    PD6 : in out event port;
-    PD7 : in out event port;
+			GND: in event port;
+			VCC: in event port;
+			AREF: in event port;
+			AVCC: in event port;
+		properties
+			Deployment::Execution_Platform => Native;
 
-    GND : in event port;
-    VCC : in event port;
-    AREF : in event port;
-    AVCC : in event port;
-  properties
-    Deployment::Execution_Platform    => Native;
+			Processor_Properties::Processor_Family => AVR;
+			Processor_Properties::Endianess => Little_Endian;
+			Processor_Properties::Word_Length => 8 bits;
+			Processor_Properties::FPU_Present => False;
 
-    Processor_Properties::Processor_Family => AVR;
-    Processor_Properties::Endianess        => Little_Endian;
-    Processor_Properties::Word_Length      => 8 bits;
-    Processor_Properties::FPU_Present      => False;
-
-    Thread_Limit => 1;
+			Thread_Limit => 1;
 
 --  annex real_specification {**
 --     theorem check_model2
@@ -80,212 +78,194 @@ public
 --	      check (1 = 1);
 --     end check_model2;
 --  **};
-  end ATMEGA8;
+	end ATMEGA8;
 
-  processor implementation ATMEGA8.impl
-  subcomponents 
-    -- ATMEGA have three memory areas, one for code, two for data.
+	processor implementation ATMEGA8.impl
+		subcomponents
+			-- ATMEGA have three memory areas, one for code, two for data.
+			Flash_Memory: memory Memories::Flash_Memory.impl {ARINC653_Extended::Memory_Kind => text;};
 
-    Flash_Memory : memory Memories::Flash_Memory.impl
-    {ARINC653_Extended::Memory_Kind => text;};
+			SRAM: memory Memories::SRAM.impl {ARINC653_Extended::Memory_Kind => bss;};
 
-    SRAM         : memory Memories::SRAM.impl
-    {ARINC653_Extended::Memory_Kind => bss;};
+			EEPROM: memory Memories::EEPROM.impl {ARINC653_Extended::Memory_Kind => bss;};
+	end ATMEGA8.impl;
 
-    EEPROM       : memory Memories::EEPROM.impl
-    {ARINC653_Extended::Memory_Kind => bss;};
-  end ATMEGA8.impl;
+	---------------
+	-- ATMEGA168 --
+	---------------
+	processor ATMEGA168 extends ATMEGA8
+		properties
+			Processor_Properties::Processor_Frequency => 16 Mhz;
+	end ATMEGA168;
 
-  ---------------
-  -- ATMEGA168 --
-  ---------------
+	processor implementation ATMEGA168.impl extends ATMEGA8.impl
+		properties
+			Memory_Size => 16_384 Bytes applies to Flash_Memory;
+			Memory_Size => 1_024 Bytes applies to SRAM;
+			Memory_Size => 512 Bytes applies to EEPROM;
+	end ATMEGA168.impl;
 
-  processor ATMEGA168 extends ATMEGA8
-  properties
-    Processor_Properties::Processor_Frequency => 16 Mhz;
-  end ATMEGA168;
+	----------------
+	-- ATMEGA328p --
+	----------------
+	processor ATMEGA328p extends ATMEGA8
+		properties
+			Data_Sheet::UUID => "http://atmel.com:80/dyn/products/product_card.asp?PN=ATmega328P";
+			Processor_Properties::Processor_Frequency => 16 Mhz;
+	end ATMEGA328p;
 
-  processor implementation ATMEGA168.impl extends ATMEGA8.impl
-  properties
-    Memory_Size => 16_384 Bytes applies to Flash_Memory;
-    Memory_Size =>  1_024 Bytes applies to SRAM;
-    Memory_Size =>    512 Bytes applies to EEPROM;
-  end ATMEGA168.impl;
+	processor implementation ATMEGA328p.impl extends ATMEGA8.impl
+		properties
+			Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+			Memory_Size => 32_768 Bytes applies to Flash_Memory;
+			Memory_Size => 2_048 Bytes applies to SRAM;
+			Memory_Size => 1_024 Bytes applies to EEPROM;
+	end ATMEGA328p.impl;
 
-  ----------------
-  -- ATMEGA328p --
-  ----------------
+	----------------
+	-- ATMEGA328 --
+	----------------
+	processor ATMEGA328 extends ATMEGA328p
+		properties
+			Data_Sheet::UUID => "http://www.atmel.com/devices/ATMEGA328.aspx?tab=parameters";
 
-  processor ATMEGA328p extends ATMEGA8
-  properties
-    Data_Sheet::UUID 
-       => "http://atmel.com:80/dyn/products/product_card.asp?PN=ATmega328P";
-    Processor_Properties::Processor_Frequency => 16 Mhz;
-  end ATMEGA328p;
-
-  processor implementation ATMEGA328p.impl extends ATMEGA8.impl
-  properties
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
-    Memory_Size => 32_768 Bytes applies to Flash_Memory;
-    Memory_Size =>  2_048 Bytes applies to SRAM;
-    Memory_Size =>  1_024 Bytes applies to EEPROM;
-  end ATMEGA328p.impl;
-  
-  ----------------
-  -- ATMEGA328 --
-  ----------------
-  
-  processor ATMEGA328 extends ATMEGA328p
-  properties
-  	Data_Sheet::UUID
-  		=> "http://www.atmel.com/devices/ATMEGA328.aspx?tab=parameters";
-  	
 	end ATMEGA328;
 
-  processor implementation ATMEGA328.impl extends ATMEGA328p.impl
-   end ATMEGA328.impl;
-   
-   
-   
-  processor ATMEGA2560 extends Processors::Generic_CPU
-  	features
- 
-   	PA3 : in out event port;
-   	PA4 : in out event port;
-   	PA5 : in out event port;
-   	PA6 : in out event port;
-   	PA7 : in out event port;
+	processor implementation ATMEGA328.impl extends ATMEGA328p.impl
+	end ATMEGA328.impl;
 
-	PB0 : in out event port;
-    PB1 : in out event port;
-    PB2 : in out event port;
-    PB3 : in out event port;
-    PB4 : in out event port;
-    PB5 : in out event port;
-    PB6 : in out event port;
-    PB7 : in out event port;
+	processor ATMEGA2560 extends Processors::Generic_CPU
+		features
 
-	PC0 : in out event port;
-    PC1 : in out event port;
-    PC2 : in out event port;
-    PC3 : in out event port;
-    PC4 : in out event port;
-    PC5 : in out event port;
-    PC6 : in out event port;
-    PC7 : in out event port;    
+			PA3: in out data port;
+			PA4: in out data port;
+			PA5: in out data port;
+			PA6: in out data port;
+			PA7: in out data port;
 
-	PD0 : in out event port;
-    PD1 : in out event port;
-    PD2 : in out event port;
-    PD3 : in out event port;
-    PD4 : in out event port;
-    PD5 : in out event port;
-    PD6 : in out event port;
-    PD7 : in out event port;    
-	  		  	
-  	PE0 : in out event port;
-   	PE1 : in out event port;
-   	PE2 : in out event port;
-   	PE3 : in out event port;
-   	PE4 : in out event port;
-   	PE5 : in out event port;
-   	PE6 : in out event port;
-   	PE7 : in out event port;
-  
-	PF0 : in out event port;
-   	PF1 : in out event port;
-   	PF2 : in out event port;
-   	PF3 : in out event port;
-   	PF4 : in out event port;
-   	PF5 : in out event port;
-   	PF6 : in out event port;
-   	PF7 : in out event port;  
-  
-	PG0 : in out event port;
-   	PG1 : in out event port;
-   	PG2 : in out event port;   	
-   	PG3 : in out event port;
-   	PG4 : in out event port;
-   	PG5 : in out event port;
-   	
-   	PH0 : in out event port;
-   	PH1 : in out event port;
-   	PH2 : in out event port;   	
-   	PH3 : in out event port;
-   	PH4 : in out event port;
-   	PH5 : in out event port;
-   	PH6 : in out event port;
-   	PH7 : in out event port;
-   	
-	PK0 : in out event port;
-   	PK1 : in out event port;
-   	PK2 : in out event port;   	
-   	PK3 : in out event port;
-   	PK4 : in out event port;
-   	PK5 : in out event port;
-   	PK6 : in out event port;	
-   	PK7 : in out event port;	
-    
-    PL0 : in out event port;
-   	PL1 : in out event port;
-   	PL2 : in out event port;   	
-   	PL3 : in out event port;
-   	PL4 : in out event port;
-   	PL5 : in out event port;
-   	PL6 : in out event port;	
-   	PL7 : in out event port;	
-    
-    PJ0 : in out event port;
-   	PJ1 : in out event port;
-   	PJ2 : in out event port;   	
-   	PJ3 : in out event port;
-   	PJ4 : in out event port;
-   	PJ5 : in out event port;
-   	PJ6 : in out event port;	
-   	PJ7 : in out event port;	
-    
-    GND   : in event port;
-    VCC   : in event port;
-    AREF  : in event port;
-    AVCC  : in event port;		
-  	RESET : in event port;	
-  	XTAL1 : in event port;
-  	XTAL2 : out event port;	
-  		
-  properties
-  	Data_Sheet::UUID
-  		=> "https://ww1.microchip.com/downloads/en/devicedoc/atmel-2549-8-bit-avr-microcontroller-atmega640-1280-1281-2560-2561_datasheet.pdf";
-  	
-  	Deployment::Execution_Platform   	   => Native;
-    Processor_Properties::Processor_Family => AVR;
-    Processor_Properties::Endianess        => Little_Endian;
-    Processor_Properties::Word_Length      => 8 bits;
-    Processor_Properties::FPU_Present      => False;
-    Thread_Limit => 1;  	
-    Processor_Properties::Processor_Frequency => 16 Mhz;
-    
-  end ATMEGA2560; 
-  
- processor implementation ATMEGA2560.impl
-  subcomponents 
-    -- ATMEGA have three memory areas, one for code, two for data.
+			PB0: in out data port;
+			PB1: in out data port;
+			PB2: in out data port;
+			PB3: in out data port;
+			PB4: in out data port;
+			PB5: in out data port;
+			PB6: in out data port;
+			PB7: in out data port;
 
-    Flash_Memory : memory Memories::Flash_Memory.impl
-    {ARINC653_Extended::Memory_Kind => text;};
+			PC0: in out data port;
+			PC1: in out data port;
+			PC2: in out data port;
+			PC3: in out data port;
+			PC4: in out data port;
+			PC5: in out data port;
+			PC6: in out data port;
+			PC7: in out data port;
 
-    SRAM         : memory Memories::SRAM.impl
-    {ARINC653_Extended::Memory_Kind => bss;};
+			PD0: in out data port;
+			PD1: in out data port;
+			PD2: in out data port;
+			PD3: in out data port;
+			PD4: in out data port;
+			PD5: in out data port;
+			PD6: in out data port;
+			PD7: in out data port;
 
-    EEPROM       : memory Memories::EEPROM.impl
-    {ARINC653_Extended::Memory_Kind => bss;};
-    
-  properties
-    Memory_Size =>  268_435_456 Bytes applies to Flash_Memory;
-    Memory_Size =>  8_192 Bytes applies to SRAM;
-    Memory_Size =>  4_096 Bytes applies to EEPROM;
-    
-  end ATMEGA2560.impl;
-  
+			PE0: in out data port;
+			PE1: in out data port;
+			PE2: in out data port;
+			PE3: in out data port;
+			PE4: in out data port;
+			PE5: in out data port;
+			PE6: in out data port;
+			PE7: in out data port;
 
+			PF0: in out data port;
+			PF1: in out data port;
+			PF2: in out data port;
+			PF3: in out data port;
+			PF4: in out data port;
+			PF5: in out data port;
+			PF6: in out data port;
+			PF7: in out data port;
+
+			PG0: in out data port;
+			PG1: in out data port;
+			PG2: in out data port;
+			PG3: in out data port;
+			PG4: in out data port;
+			PG5: in out data port;
+
+			PH0: in out data port;
+			PH1: in out data port;
+			PH2: in out data port;
+			PH3: in out data port;
+			PH4: in out data port;
+			PH5: in out data port;
+			PH6: in out data port;
+			PH7: in out data port;
+
+			PK0: in out data port;
+			PK1: in out data port;
+			PK2: in out data port;
+			PK3: in out data port;
+			PK4: in out data port;
+			PK5: in out data port;
+			PK6: in out data port;
+			PK7: in out data port;
+
+			PL0: in out data port;
+			PL1: in out data port;
+			PL2: in out data port;
+			PL3: in out data port;
+			PL4: in out data port;
+			PL5: in out data port;
+			PL6: in out data port;
+			PL7: in out data port;
+
+			PJ0: in out data port;
+			PJ1: in out data port;
+			PJ2: in out data port;
+			PJ3: in out data port;
+			PJ4: in out data port;
+			PJ5: in out data port;
+			PJ6: in out data port;
+			PJ7: in out data port;
+
+			GND: in event port;
+			VCC: in event port;
+			AREF: in event port;
+			AVCC: in event port;
+			RESET: in event port;
+			XTAL1: in event port;
+			XTAL2: out event port;
+
+		properties
+			Data_Sheet::UUID => "https://ww1.microchip.com/downloads/en/devicedoc/atmel-2549-8-bit-avr-microcontroller-atmega640-1280-1281-2560-2561_datasheet.pdf";
+
+			Deployment::Execution_Platform => Native;
+			Processor_Properties::Processor_Family => AVR;
+			Processor_Properties::Endianess => Little_Endian;
+			Processor_Properties::Word_Length => 8 bits;
+			Processor_Properties::FPU_Present => False;
+			Thread_Limit => 1;
+			Processor_Properties::Processor_Frequency => 16 Mhz;
+
+	end ATMEGA2560;
+
+	processor implementation ATMEGA2560.impl
+		subcomponents
+			-- ATMEGA have three memory areas, one for code, two for data.
+			Flash_Memory: memory Memories::Flash_Memory.impl {ARINC653_Extended::Memory_Kind => text;};
+
+			SRAM: memory Memories::SRAM.impl {ARINC653_Extended::Memory_Kind => bss;};
+
+			EEPROM: memory Memories::EEPROM.impl {ARINC653_Extended::Memory_Kind => bss;};
+
+		properties
+			Memory_Size => 268_435_456 Bytes applies to Flash_Memory;
+			Memory_Size => 8_192 Bytes applies to SRAM;
+			Memory_Size => 4_096 Bytes applies to EEPROM;
+
+	end ATMEGA2560.impl;
 
 end Processors::ATMEGA;
