@@ -136,13 +136,25 @@ public
 
 	processor ATMEGA2560 extends Processors::Generic_CPU
 		features
+			PA7: in out event port;
+			PA4: in out event port;
+			PA8: in out event port;
+			PA6: in out event port;
+			PA9: in out event port;
+			PG0: in out event port;
 
-			PA3: in out data port;
-			PA4: in out data port;
-			PA5: in out data port;
-			PA6: in out data port;
-			PA7: in out data port;
-
+			PD7: in out data port;
+			PC0: in out data port;
+			PC1: in out data port;
+			PC2: in out data port;
+			PC3: in out data port;
+			PC4: in out data port;
+			PC5: in out data port;
+			PD2: in out data port;
+			PD3: in out data port;
+			PD4: in out data port;
+			PD5: in out data port;
+			PD6: in out data port;
 			PB0: in out data port;
 			PB1: in out data port;
 			PB2: in out data port;
@@ -150,85 +162,24 @@ public
 			PB4: in out data port;
 			PB5: in out data port;
 			PB6: in out data port;
-			PB7: in out data port;
-
-			PC0: in out data port;
-			PC1: in out data port;
-			PC2: in out data port;
-			PC3: in out data port;
-			PC4: in out data port;
-			PC5: in out data port;
-			PC6: in out data port;
-			PC7: in out data port;
-
-			PD0: in out data port;
-			PD1: in out data port;
-			PD2: in out data port;
-			PD3: in out data port;
-			PD4: in out data port;
-			PD5: in out data port;
-			PD6: in out data port;
-			PD7: in out data port;
-
 			PE0: in out data port;
 			PE1: in out data port;
-			PE2: in out data port;
-			PE3: in out data port;
-			PE4: in out data port;
-			PE5: in out data port;
-			PE6: in out data port;
-			PE7: in out data port;
-
-			PF0: in out data port;
-			PF1: in out data port;
-			PF2: in out data port;
-			PF3: in out data port;
-			PF4: in out data port;
-			PF5: in out data port;
-			PF6: in out data port;
-			PF7: in out data port;
-
-			PG0: in out data port;
-			PG1: in out data port;
-			PG2: in out data port;
-			PG3: in out data port;
-			PG4: in out data port;
-			PG5: in out data port;
-
-			PH0: in out data port;
 			PH1: in out data port;
-			PH2: in out data port;
-			PH3: in out data port;
-			PH4: in out data port;
+			PH0: in out data port;
+			PD0: in out data port;
+			PD1: in out data port;
+			PG1: in out data port;
+			PK5: in out data port; --a13
+			PK4: in out data port; --a12
 			PH5: in out data port;
-			PH6: in out data port;
-			PH7: in out data port;
-
-			PK0: in out data port;
-			PK1: in out data port;
-			PK2: in out data port;
-			PK3: in out data port;
-			PK4: in out data port;
-			PK5: in out data port;
-			PK6: in out data port;
-			PK7: in out data port;
-
-			PL0: in out data port;
-			PL1: in out data port;
-			PL2: in out data port;
-			PL3: in out data port;
+			PH4: in out data port;
+			PH3: in out data port;
+			PE5: in out data port;
+			PE4: in out data port;
+			PE3: in out data port;
 			PL4: in out data port;
 			PL5: in out data port;
-			PL6: in out data port;
-			PL7: in out data port;
 
-			PJ0: in out data port;
-			PJ1: in out data port;
-			PJ2: in out data port;
-			PJ3: in out data port;
-			PJ4: in out data port;
-			PJ5: in out data port;
-			PJ6: in out data port;
 			PJ7: in out data port;
 
 			GND: in event port;
