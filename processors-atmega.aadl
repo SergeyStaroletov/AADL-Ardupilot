@@ -177,6 +177,8 @@ public
 			PE5: in out data port;
 			PE4: in out data port;
 			PE3: in out data port;
+			
+			PL1: in out data port;
 			PL4: in out data port;
 			PL5: in out data port;
 

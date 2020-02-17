@@ -96,8 +96,20 @@ public
 	end DataFlash_AT45DB321D;
 
 	device ADC_ADS7844
-
 	end ADC_ADS7844;
+	
+	device AT328P_PPM_Encloder
+		features
+			in0: in data port;
+			in1: in data port;
+			in2: in data port;
+			in3: in data port;
+			in4: in data port;
+			in5: in data port;
+			in6: in data port;
+			in7: in data port;
+			outPPM: out data port;
+	end AT328P_PPM_Encloder;
 
 	system Ardupilot
 		features
@@ -152,9 +164,12 @@ public
 			LedGPS: device Led;
 			LedMotor1: device Led;
 			LedMotor2: device Led;
-
+			Buzzer: device Led;
+			
 			relay1: device relay;
 			dataflash: device DataFlash_AT45DB321D;
+			
+			inputRC: device AT328P_PPM_Encloder;
 
 		connections
 
@@ -222,6 +237,8 @@ public
 			Led2: port ATM2560.PA6 -> LedGPS.LedPort;
 			Led3: port ATM2560.PA4 -> LedMotor1.LedPort;
 			Led4: port ATM2560.PA8 -> LedMotor2.LedPort;
+			--buzzer
+			Buz1: port ATM2560.PC6 -> Buzzer.LedPort; --59
 
 			--relay
 			Re1: port ATM2560.PA9 -> relay1.inPort;
@@ -233,6 +250,9 @@ public
 			df3: port SPI3.MOSI -> dataflash.MISO;
 			df4: port dataflash.MOSI -> SPI3.MISO;
 			df5: port SPI3.SCLK -> dataflash.SCLK;
+			
+			--input rc encoder
+			in0: port inputRC.outPPM -> ATM2560.PL1;
 
 	-- GPS power switch and battery attenuator are not modeled
 	end Ardupilot.impl;
