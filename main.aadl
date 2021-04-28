@@ -31,13 +31,12 @@ public
 	
 -- rc_loop
 	
-	-- 1000 / (100/x) = 10 * x
 	
  	thread thr_rc_loop
    	properties
       Dispatch_Protocol => Periodic;
       Compute_Execution_Time => 0 ms .. 100 ms;
-      Period => 10 Ms;
+      Period => 10 Ms; -- 1000 / (100 / x) = 10 * x
     end thr_rc_loop;
    	thread implementation thr_rc_loop.i
    	end thr_rc_loop.i;
@@ -246,8 +245,319 @@ public
 		thr: thread thr_three_hz_loop.i;
 	end process_three_hz_loop.i;
 
+-- compass_accumulate
+
+ 	thread thr_compass_accumulate
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 420 ms;
+      Period => 20 Ms;
+    end thr_compass_accumulate;
+   	thread implementation thr_compass_accumulate.i
+   	end thr_compass_accumulate.i;
+	
+	process process_compass_accumulate
+	end process_compass_accumulate;
+
+	process implementation process_compass_accumulate.i
+		subcomponents
+		thr: thread thr_compass_accumulate.i;
+	end process_compass_accumulate.i;
+
+-- barometer_accumulate
+
+ 	thread thr_barometer_accumulate
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 250 ms;
+      Period => 20 Ms;
+    end thr_barometer_accumulate;
+   	thread implementation thr_barometer_accumulate.i
+   	end thr_barometer_accumulate.i;
+	
+	process process_barometer_accumulate
+	end process_barometer_accumulate;
+
+	process implementation process_barometer_accumulate.i
+		subcomponents
+		thr: thread thr_barometer_accumulate.i;
+	end process_barometer_accumulate.i;
 
 
+-- update_notify 
+
+ 	thread thr_update_notify
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 100 ms;
+      Period => 20 Ms;
+    end thr_update_notify;
+   	thread implementation thr_update_notify.i
+   	end thr_update_notify.i;
+	
+	process process_update_notify
+	end process_update_notify;
+
+	process implementation process_update_notify.i
+		subcomponents
+		thr: thread thr_update_notify.i;
+	end process_update_notify.i;
+
+
+-- one_hz_loop
+
+ 	thread thr_one_hz_loop
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 420 ms;
+      Period => 1000 Ms;
+    end thr_one_hz_loop;
+   	thread implementation thr_one_hz_loop.i
+   	end thr_one_hz_loop.i;
+	
+	process process_one_hz_loop
+	end process_one_hz_loop;
+
+	process implementation process_one_hz_loop.i
+		subcomponents
+		thr: thread thr_one_hz_loop.i;
+	end process_one_hz_loop.i;
+
+
+-- ekf_dcm_check
+
+ 	thread thr_ekf_dcm_check
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 20 ms;
+      Period => 100 Ms;
+    end thr_ekf_dcm_check;
+   	thread implementation thr_ekf_dcm_check.i
+   	end thr_ekf_dcm_check.i;
+	
+	process process_ekf_dcm_check
+	end process_ekf_dcm_check;
+
+	process implementation process_ekf_dcm_check.i
+		subcomponents
+		thr: thread thr_ekf_dcm_check.i;
+	end process_ekf_dcm_check.i;
+
+
+-- crash_check
+
+ 	thread thr_crash_check
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 20 ms;
+      Period => 100 Ms;
+    end thr_crash_check;
+   	thread implementation thr_crash_check.i
+   	end thr_crash_check.i;
+	
+	process process_crash_check
+	end process_crash_check;
+
+	process implementation process_crash_check.i
+		subcomponents
+		thr: thread thr_crash_check.i;
+	end process_crash_check.i;
+
+
+-- gcs_check_input
+
+ 	thread thr_gcs_check_input
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 550 ms;
+      Period => 20 Ms;
+    end thr_gcs_check_input;
+   	thread implementation thr_gcs_check_input.i
+   	end thr_gcs_check_input.i;
+	
+	process process_gcs_check_input
+	end process_gcs_check_input;
+
+	process implementation process_gcs_check_input.i
+		subcomponents
+		thr: thread thr_gcs_check_input.i;
+	end process_gcs_check_input.i;
+
+
+-- gcs_send_heartbeat
+
+ 	thread thr_gcs_send_heartbeat
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 150 ms;
+      Period => 1000 Ms;
+    end thr_gcs_send_heartbeat;
+   	thread implementation thr_gcs_send_heartbeat.i
+   	end thr_gcs_send_heartbeat.i;
+	
+	process process_gcs_send_heartbeat
+	end process_gcs_send_heartbeat;
+
+	process implementation process_gcs_send_heartbeat.i
+		subcomponents
+		thr: thread thr_gcs_send_heartbeat.i;
+	end process_gcs_send_heartbeat.i;
+
+-- gcs_send_deferred
+
+ 	thread thr_gcs_send_deferred
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 720 ms;
+      Period => 20 Ms;
+    end thr_gcs_send_deferred;
+   	thread implementation thr_gcs_send_deferred.i
+   	end thr_gcs_send_deferred.i;
+	
+	process process_gcs_send_deferred
+	end process_gcs_send_deferred;
+
+	process implementation process_gcs_send_deferred.i
+		subcomponents
+		thr: thread thr_gcs_send_deferred.i;
+	end process_gcs_send_deferred.i;
+
+
+-- gcs_data_stream_send
+
+ 	thread thr_gcs_data_stream_send
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 950 ms;
+      Period => 20 Ms;
+    end thr_gcs_data_stream_send;
+   	thread implementation thr_gcs_data_stream_send.i
+   	end thr_gcs_data_stream_send.i;
+	
+	process process_gcs_data_stream_send
+	end process_gcs_data_stream_send;
+
+	process implementation process_gcs_data_stream_send.i
+		subcomponents
+		thr: thread thr_gcs_data_stream_send.i;
+	end process_gcs_data_stream_send.i;
+
+
+-- update_mount
+
+ 	thread thr_update_mount
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 450 ms;
+      Period => 20 Ms;
+    end thr_update_mount;
+   	thread implementation thr_update_mount.i
+   	end thr_update_mount.i;
+	
+	process process_update_mount
+	end process_update_mount;
+
+	process implementation process_update_mount.i
+		subcomponents
+		thr: thread thr_update_mount.i;
+	end process_update_mount.i;
+
+-- ten_hz_logging_loop
+
+ 	thread thr_ten_hz_logging_loop
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 300 ms;
+      Period => 100 Ms;
+    end thr_ten_hz_logging_loop;
+   	thread implementation thr_ten_hz_logging_loop.i
+   	end thr_ten_hz_logging_loop.i;
+	
+	process process_ten_hz_logging_loop
+	end process_ten_hz_logging_loop;
+
+	process implementation process_ten_hz_logging_loop.i
+		subcomponents
+		thr: thread thr_ten_hz_logging_loop.i;
+	end process_ten_hz_logging_loop.i;
+
+
+-- fifty_hz_logging_loop
+
+ 	thread thr_fifty_hz_logging_loop
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 220 ms;
+      Period => 20 Ms;
+    end thr_fifty_hz_logging_loop;
+   	thread implementation thr_fifty_hz_logging_loop.i
+   	end thr_fifty_hz_logging_loop.i;
+	
+	process process_fifty_hz_logging_loop
+	end process_fifty_hz_logging_loop;
+
+	process implementation process_fifty_hz_logging_loop.i
+		subcomponents
+		thr: thread thr_fifty_hz_logging_loop.i;
+	end process_fifty_hz_logging_loop.i;
+	
+-- perf_update
+
+ 	thread thr_perf_update
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 200 ms;
+      Period => 10000 Ms;
+    end thr_perf_update;
+   	thread implementation thr_perf_update.i
+   	end thr_perf_update.i;
+	
+	process process_perf_update
+	end process_perf_update;
+
+	process implementation process_perf_update.i
+		subcomponents
+		thr: thread thr_perf_update.i;
+	end process_perf_update.i;
+
+-- read_receiver_rssi
+
+ 	thread thr_read_receiver_rssi
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 50 ms;
+      Period => 100 Ms;
+    end thr_read_receiver_rssi;
+   	thread implementation thr_read_receiver_rssi.i
+   	end thr_read_receiver_rssi.i;
+	
+	process process_read_receiver_rssi
+	end process_read_receiver_rssi;
+
+	process implementation process_read_receiver_rssi.i
+		subcomponents
+		thr: thread thr_read_receiver_rssi.i;
+	end process_read_receiver_rssi.i;
+	
+-- telemetry_send
+
+ 	thread thr_telemetry_send
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 100 ms;
+      Period => 200 Ms;
+    end thr_telemetry_send;
+   	thread implementation thr_telemetry_send.i
+   	end thr_telemetry_send.i;
+	
+	process process_telemetry_send
+	end process_telemetry_send;
+
+	process implementation process_telemetry_send.i
+		subcomponents
+		thr: thread thr_telemetry_send.i;
+	end process_telemetry_send.i;
+	
 
 	
 	system implementation APM_2_6.i
@@ -263,7 +573,22 @@ public
 			 run_nav_updates: process process_run_nav_updates.i;
 			 update_thr_cruise: process process_update_thr_cruise.i;
 			 three_hz_loop: process process_three_hz_loop.i;
-			 
+			 compass_accumulate: process process_compass_accumulate.i;
+			 barometer_accumulate: process process_barometer_accumulate.i;
+			 update_notify: process process_update_notify.i;
+			 one_hz_loop: process process_one_hz_loop.i;
+			 ekf_dcm_check: process process_ekf_dcm_check.i;
+			 crash_check: process process_crash_check.i;
+			 gcs_check_input: process process_gcs_check_input.i;
+			 gcs_send_heartbeat: process process_gcs_send_heartbeat.i;
+			 gcs_send_deferred: process process_gcs_send_deferred.i;
+			 gcs_data_stream_send: process process_gcs_data_stream_send.i;
+			 update_mount: process process_update_mount.i;
+			 ten_hz_logging_loop: process process_ten_hz_logging_loop.i;
+			 fifty_hz_logging_loop: process process_fifty_hz_logging_loop.i;
+			 perf_update: process process_perf_update.i;
+			 read_receiver_rssi: process process_read_receiver_rssi.i;
+			 telemetry_send: process process_telemetry_send.i;
 			 
 	end APM_2_6.i;
 	
