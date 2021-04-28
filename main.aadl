@@ -31,11 +31,13 @@ public
 	
 -- rc_loop
 	
+	-- 1000 / (100/x) = 10 * x
+	
  	thread thr_rc_loop
    	properties
       Dispatch_Protocol => Periodic;
       Compute_Execution_Time => 0 ms .. 100 ms;
-      Period => 100 Ms;
+      Period => 10 Ms;
     end thr_rc_loop;
    	thread implementation thr_rc_loop.i
    	end thr_rc_loop.i;
@@ -53,8 +55,8 @@ public
  	thread thr_throttle_loop
    	properties
       Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 50 ms;
-      Period => 450 Ms;
+      Compute_Execution_Time => 0 ms .. 450 ms;
+      Period => 20 Ms;
     end thr_throttle_loop;
    	thread implementation thr_throttle_loop.i
    	end thr_throttle_loop.i;
@@ -73,8 +75,8 @@ public
  	thread thr_update_GPS
    	properties
       Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 50 ms;
-      Period => 900 Ms;
+      Compute_Execution_Time => 0 ms .. 900 ms;
+      Period => 20 Ms;
     end thr_update_GPS;
    	thread implementation thr_update_GPS.i
    	end thr_update_GPS.i;
@@ -92,8 +94,8 @@ public
  	thread thr_update_batt_compass
    	properties
       Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 10 ms;
-      Period => 720 Ms;
+      Compute_Execution_Time => 0 ms .. 720 ms;
+      Period => 100 Ms;
     end thr_update_batt_compass;
    	thread implementation thr_update_batt_compass.i
    	end thr_update_batt_compass.i;
@@ -112,8 +114,8 @@ public
  	thread thr_read_aux_switches
    	properties
       Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 10 ms;
-      Period => 50 Ms;
+      Compute_Execution_Time => 0 ms .. 50 ms;
+      Period => 100 Ms;
     end thr_read_aux_switches;
    	thread implementation thr_read_aux_switches.i
    	end thr_read_aux_switches.i;
@@ -133,7 +135,7 @@ public
    	properties
       Dispatch_Protocol => Periodic;
       Compute_Execution_Time => 0 ms .. 10 ms;
-      Period => 10 Ms;
+      Period => 100 Ms;
     end thr_arm_motors_check;
    	thread implementation thr_arm_motors_check.i
    	end thr_arm_motors_check.i;
@@ -152,8 +154,8 @@ public
  	thread thr_auto_trim
    	properties
       Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 10 ms;
-      Period => 140 Ms;
+      Compute_Execution_Time => 0 ms .. 140 ms;
+      Period => 100 Ms;
     end thr_auto_trim;
    	thread implementation thr_auto_trim.i
    	end thr_auto_trim.i;
@@ -166,6 +168,87 @@ public
 		thr: thread thr_auto_trim.i;
 	end process_auto_trim.i;
 
+
+-- update_altitude
+
+ 	thread thr_update_altitude
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 1000 ms;
+      Period => 100 Ms;
+    end thr_update_altitude;
+   	thread implementation thr_update_altitude.i
+   	end thr_update_altitude.i;
+	
+	process process_update_altitude
+	end process_update_altitude;
+
+	process implementation process_update_altitude.i
+		subcomponents
+		thr: thread thr_update_altitude.i;
+	end process_update_altitude.i;
+
+-- run_nav_updates
+
+ 	thread thr_run_nav_updates
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 800 ms;
+      Period => 40 Ms;
+    end thr_run_nav_updates;
+   	thread implementation thr_run_nav_updates.i
+   	end thr_run_nav_updates.i;
+	
+	process process_run_nav_updates
+	end process_run_nav_updates;
+
+	process implementation process_run_nav_updates.i
+		subcomponents
+		thr: thread thr_run_nav_updates.i;
+	end process_run_nav_updates.i;
+
+
+-- update_thr_cruise 
+
+ 	thread thr_update_thr_cruise
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 50 ms;
+      Period => 10 Ms;
+    end thr_update_thr_cruise;
+   	thread implementation thr_update_thr_cruise.i
+   	end thr_update_thr_cruise.i;
+	
+	process process_update_thr_cruise
+	end process_update_thr_cruise;
+
+	process implementation process_update_thr_cruise.i
+		subcomponents
+		thr: thread thr_update_thr_cruise.i;
+	end process_update_thr_cruise.i;
+
+-- three_hz_loop 
+
+ 	thread thr_three_hz_loop
+   	properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 90 ms;
+      Period => 330 Ms;
+    end thr_three_hz_loop;
+   	thread implementation thr_three_hz_loop.i
+   	end thr_three_hz_loop.i;
+	
+	process process_three_hz_loop
+	end process_three_hz_loop;
+
+	process implementation process_three_hz_loop.i
+		subcomponents
+		thr: thread thr_three_hz_loop.i;
+	end process_three_hz_loop.i;
+
+
+
+
 	
 	system implementation APM_2_6.i
 		subcomponents
@@ -176,6 +259,10 @@ public
 			 read_aux_switches: process process_read_aux_switches.i;
 			 arm_motors_check: process process_arm_motors_check.i;
 			 auto_trim: process process_auto_trim.i;
+			 update_altitude: process process_update_altitude.i;
+			 run_nav_updates: process process_run_nav_updates.i;
+			 update_thr_cruise: process process_update_thr_cruise.i;
+			 three_hz_loop: process process_three_hz_loop.i;
 			 
 			 
 	end APM_2_6.i;
