@@ -3,14 +3,13 @@
 package Boards::Ardupilot
 public
 
-	with Data_Sheet;
-	with Deployment;
-	with devices::SN74LS157D;
+	with Data_Sheet; 
 	with Devices::SPI;
 	with Processors::ATMEGA;
-	with Processors::ATtiny;
+	with Electricity_Properties;
 
-	device UART_Device
+
+	device UART_Device		
 		features
 			TX: out data port;
 			RX: in data port;
@@ -24,13 +23,14 @@ public
 	end SPI;
 
 -- devices -> will be in different files
+
 	device FrskyTelemetry extends UART_Device --uart
 		features
 			VCC: in event port;
 			GND: in event port;
 	end FrskyTelemetry;
 
-	device BarometerMS5611 extends Devices::SPI::SPI_Device
+	device BarometerMS5611 extends devices::SPI::SPI_Device
 		features
 			VCC: in event port;
 			GND: in event port;
@@ -56,13 +56,13 @@ public
 			GND: in out event port;
 	end Com2USB;
 
-	device i2c_pins
+	device I2C_Device
 		features
 			SDA: in out data port;
 			SCL: in out data port;
-	end i2c_pins;
+	end I2C_Device;
 
-	device MagnetometerMC5843 extends i2c_pins
+	device MagnetometerMC5843 extends I2C_Device
 		features
 			VCC: in event port;
 			GND: in event port;
@@ -98,7 +98,7 @@ public
 	device ADC_ADS7844
 	end ADC_ADS7844;
 	
-	device AT328P_PPM_Encloder
+	device PPM_Encoder_input
 		features
 			in0: in data port;
 			in1: in data port;
@@ -109,33 +109,35 @@ public
 			in6: in data port;
 			in7: in data port;
 			outPPM: out data port;
-	end AT328P_PPM_Encloder;
+	end PPM_Encoder_input;
 
 	system Ardupilot
-		features
+		--features
 			--SPort	: in out event port; --??
 			--GPSport	: in out event port; --??
-			XY_port: in event data port;
-			Z_port: in event data port;
-			Bvolt: in event data port;
-			SI_Bv: in event data port;
-			Pres: in event data port;
-			CTRL: in event data port;
-			IN1: in event data port;
-			IN2: in event data port;
-			IN3: in event data port;
-			IN4: in event data port;
-			IN5V: in event data port;
-			Mux_in1: in event data port;
-			Mux_in2: in event data port;
-			Out1: out event data port;
-			Out2: out event data port;
-			Out3: out event data port;
-			Out4: out event data port;
-			YLed: out event data port;
-			BLed: out event data port;
-			RBFF: in event data port;
-			VccLed: out event data port;
+			
+			--???
+			--XY_port: in event data port;
+			--Z_port: in event data port;
+			--Bvolt: in event data port;
+			--SI_Bv: in event data port;
+			--Pres: in event data port;
+			--CTRL: in event data port;
+			--IN1: in event data port;
+			--IN2: in event data port;
+			--IN3: in event data port;
+			--IN4: in event data port;
+			--IN5V: in event data port;
+			--Mux_in1: in event data port;
+			--Mux_in2: in event data port;
+			--Out1: out event data port;
+			--Out2: out event data port;
+			--Out3: out event data port;
+			--Out4: out event data port;
+			--YLed: out event data port;
+			--BLed: out event data port;
+			--RBFF: in event data port;
+			--VccLed: out event data port;
 
 		Properties
 			Data_Sheet::UUID => "https://ardupilot.org/copter/docs/common-apm25-and-26-overview.html";
@@ -143,118 +145,121 @@ public
 	end Ardupilot;
 
 	system implementation Ardupilot.impl
-		Subcomponents
-			ATM2560: processor Processors::ATMEGA::ATMEGA2560.impl;
-			--addition
-			FrskyTelemetry: device FrskyTelemetry;
-			MagnetometerMC5843: device MagnetometerMC5843;
-			BarometerMS5611: device BarometerMS5611;
-			AccelerometerMPU6000: device AccelerometerMPU6000;
-			USB: device Com2USB;
-			GPS: device GPS;
-			SPI0: bus SPI;
-			SPI3: bus SPI;
-			Battery: device battery;
-			Motor1: device Motor;
-			Motor2: device Motor;
-			Motor3: device Motor;
-			Motor4: device Motor;
+	Subcomponents
+		--main processor
+		ATM2560: processor Processors::ATMEGA::ATMEGA2560.impl;
+		--PWM and UART/USB converter
+		ATM32U2: processor Processors::ATMEGA::ATMEGA32U2.impl;
 
-			LedArmed: device Led;
-			LedGPS: device Led;
-			LedMotor1: device Led;
-			LedMotor2: device Led;
-			Buzzer: device Led;
-			
-			relay1: device relay;
-			dataflash: device DataFlash_AT45DB321D;
-			
-			inputRC: device AT328P_PPM_Encloder;
+		FrskyTelemetry: device FrskyTelemetry;
+		MagnetometerMC5843: device MagnetometerMC5843;
+		BarometerMS5611: device BarometerMS5611;
+		AccelerometerMPU6000: device AccelerometerMPU6000;
+		USB: device Com2USB;
+		GPS: device GPS;
+		SPI0: bus SPI;
+		SPI3: bus SPI;
+		Battery: device battery;
+		Motor1: device Motor;
+		Motor2: device Motor;
+		Motor3: device Motor;
+		Motor4: device Motor;
 
-		connections
+		LedArmed: device Led;
+		LedGPS: device Led;
+		LedMotor1: device Led;
+		LedMotor2: device Led;
 
-			--C7: port IN5V -> ATM2560.PD7;
-			--C8: port XY_port -> ATM2560.PC0;
-			--C9: port XY_port -> ATM2560.PC1;
-			--C10: port Z_port -> ATM2560.PC2;
-			--C11: port SI_Bv -> ATM2560.PC4;
-			--C12: port Bvolt -> ATM2560.PC5;
-			--C13: port Pres -> ATM2560.PC3;
-			--C14: port IN3 -> ATM2560.PD2;
-			--C15: port IN2 -> ATM2560.PD3;
-			--C16: port ATM2560.PB5 -> YLed;
-			--C17: port ATM2560.PB5 -> BLed;
-			--C18: port RBFF -> ATM2560.PD6;
-			--C19: port IN1 -> ATM2560.PD2;
-			--Mmultiplexer / ATM328 interface
-			SP1: port CTRL -> SPI3.SCLK; --
-			-- interface SPI5=JP5 / ATM3258
-			SP2: port ATM2560.PB4 -> SPI0.MISO;
-			SP3: port ATM2560.PB5 -> SPI0.SCLK;
-			--A3: port ATM2560.PC6 -> SPI0.RST;
-			SP4: port SPI0.MOSI -> ATM2560.PB3;
+		relay1: device relay;
+		dataflash: device DataFlash_AT45DB321D;
 
-			--console
-			C1: port ATM2560.PE1 -> USB.RX;
-			C2: port USB.TX -> ATM2560.PE0;
+	connections
 
-			--gps
-			G1: port ATM2560.PD4 -> GPS.RX;
-			G2: port GPS.TX -> ATM2560.PD3;
+		--C7: port IN5V -> ATM2560.PD7;
+		--C8: port XY_port -> ATM2560.PC0;
+		--C9: port XY_port -> ATM2560.PC1;
+		--C10: port Z_port -> ATM2560.PC2;
+		--C11: port SI_Bv -> ATM2560.PC4;
+		--C12: port Bvolt -> ATM2560.PC5;
+		--C13: port Pres -> ATM2560.PC3;
+		--C14: port IN3 -> ATM2560.PD2;
+		--C15: port IN2 -> ATM2560.PD3;
+		--C16: port ATM2560.PB5 -> YLed;
+		--C17: port ATM2560.PB5 -> BLed;
+		--C18: port RBFF -> ATM2560.PD6;
+		--C19: port IN1 -> ATM2560.PD2;
+		--Mmultiplexer / ATM328 interface
+		
+		--?
+		--SP1: port CTRL -> SPI3.SCLK; --
+		
+		
+		-- interface SPI5=JP5 / ATM3258
+		SP2: port ATM2560.PB4 -> SPI0.MISO;
+		SP3: port ATM2560.PB5 -> SPI0.SCLK;
+		--A3: port ATM2560.PC6 -> SPI0.RST;
+		SP4: port SPI0.MOSI -> ATM2560.PB3;
 
-			--telemetry
-			T1: port ATM2560.PH1 -> FrskyTelemetry.RX;
-			T2: port FrskyTelemetry.TX -> ATM2560.PH0;
+		--console
+		C1: port ATM2560.PE1 -> USB.RX;
+		C2: port USB.TX -> ATM2560.PE0;
 
-			--magnetometer
-			M1: port ATM2560.PD1 -> MagnetometerMC5843.SDA;
-			M2: port ATM2560.PD0 -> MagnetometerMC5843.SCL;
+		--gps
+		G1: port ATM2560.PD4 -> GPS.RX;
+		G2: port GPS.TX -> ATM2560.PD3;
 
-			--barometer
-			B1: port BarometerMS5611.MOSI -> SPI0.MISO;
-			B2: port SPI0.MOSI -> BarometerMS5611.MISO;
-			B3: port BarometerMS5611.SCLK -> SPI0.SCLK;
-			B4: port ATM2560.PG1 -> BarometerMS5611.SS;
+		--telemetry
+		T1: port ATM2560.PH1 -> FrskyTelemetry.RX;
+		T2: port FrskyTelemetry.TX -> ATM2560.PH0;
 
-			--accelerometer
-			A1: port AccelerometerMPU6000.MOSI -> SPI0.MISO;
-			A2: port SPI0.MOSI -> AccelerometerMPU6000.MISO;
-			A3: port AccelerometerMPU6000.SCLK -> SPI0.SCLK;
-			A4: port ATM2560.PB0 -> AccelerometerMPU6000.SS;
+		--magnetometer
+		M1: port ATM2560.PD1 -> MagnetometerMC5843.SDA;
+		M2: port ATM2560.PD0 -> MagnetometerMC5843.SCL;
 
-			--battery
-			Bat1: port Battery.Voltage -> ATM2560.PK5;
-			Bat2: port Battery.Current -> ATM2560.PK4;
+		--barometer
+		B1: port BarometerMS5611.MOSI -> SPI0.MISO;
+		B2: port SPI0.MOSI -> BarometerMS5611.MISO;
+		B3: port BarometerMS5611.SCLK -> SPI0.SCLK;
+		B4: port ATM2560.PG1 -> BarometerMS5611.SS;
 
-			--RC output: Motors
-			O1: port ATM2560.PB6 -> Motor1.Input; -- RCout.CH_1
-			O2: port ATM2560.PB5 -> Motor2.Input; -- RCout.CH_2:
-			O3: port ATM2560.PH5 -> Motor3.Input; -- RCout.CH_3:			
-			O4: port ATM2560.PH4 -> Motor4.Input; -- RCout.CH_4:
+		--accelerometer
+		A1: port AccelerometerMPU6000.MOSI -> SPI0.MISO;
+		A2: port SPI0.MOSI -> AccelerometerMPU6000.MISO;
+		A3: port AccelerometerMPU6000.SCLK -> SPI0.SCLK;
+		A4: port ATM2560.PB0 -> AccelerometerMPU6000.SS;
 
-			--leds
-			Led1: port ATM2560.PA7 -> LedArmed.LedPort;
-			Led2: port ATM2560.PA6 -> LedGPS.LedPort;
-			Led3: port ATM2560.PA4 -> LedMotor1.LedPort;
-			Led4: port ATM2560.PA8 -> LedMotor2.LedPort;
-			--buzzer
-			Buz1: port ATM2560.PC6 -> Buzzer.LedPort; --59
+		--battery
+		Bat1: port Battery.Voltage -> ATM2560.PK5;
+		Bat2: port Battery.Current -> ATM2560.PK4;
 
-			--relay
-			Re1: port ATM2560.PA9 -> relay1.inPort;
+		--RC output: Motors
+		O1: port ATM2560.PB6 -> Motor1.Input; -- RCout.CH_1
+		O2: port ATM2560.PB5 -> Motor2.Input; -- RCout.CH_2:
+		O3: port ATM2560.PH5 -> Motor3.Input; -- RCout.CH_3:			
+		O4: port ATM2560.PH4 -> Motor4.Input; -- RCout.CH_4:
+		--leds
+		Led1: port ATM2560.PA7 -> LedArmed.LedPort;
+		Led2: port ATM2560.PA6 -> LedGPS.LedPort;
+		Led3: port ATM2560.PA4 -> LedMotor1.LedPort;
+		Led4: port ATM2560.PA8 -> LedMotor2.LedPort;
+		--buzzer
+		--Buz1: port ATM2560.PC6 -> Buzzer.LedPort; --59 check
+		--relay
+		Re1: port ATM2560.PA9 -> relay1.inPort;
 
-			--DataFlash
-			Df0: port ATM2560.PG0 -> dataflash.RESET;
-			Df1: port dataflash.CardInserted -> ATM2560.PC4;
-			Df2: port ATM2560.PA6 -> dataflash.SS;
-			df3: port SPI3.MOSI -> dataflash.MISO;
-			df4: port dataflash.MOSI -> SPI3.MISO;
-			df5: port SPI3.SCLK -> dataflash.SCLK;
-			
-			--input rc encoder
-			in0: port inputRC.outPPM -> ATM2560.PL1;
+		--DataFlash
+		Df0: port ATM2560.PG0 -> dataflash.RESET;
+		Df1: port dataflash.CardInserted -> ATM2560.PC4;
+		Df2: port ATM2560.PA6 -> dataflash.SS;
+		df3: port SPI3.MOSI -> dataflash.MISO;
+		df4: port dataflash.MOSI -> SPI3.MISO;
+		df5: port SPI3.SCLK -> dataflash.SCLK;
 
-	-- GPS power switch and battery attenuator are not modeled
-	end Ardupilot.impl;
+		--usb
+		usb0: port ATM32U2.PD0 -> ATM2560.PA1; --usb connected flag
+		--output of PPM encoder
+		in0: port ATM32U2.PC6 -> ATM2560.PL1;
+
+end Ardupilot.impl;
 
 end Boards::Ardupilot;
