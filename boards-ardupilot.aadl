@@ -1,5 +1,5 @@
 -- This package models Ardupilot2.6 Board
--- fully recreated by Sergey Staroletov
+-- recreated by Sergey Staroletov
 package Boards::Ardupilot
 public
 
@@ -151,10 +151,13 @@ public
 		--PWM and UART/USB converter
 		ATM32U2: processor Processors::ATMEGA::ATMEGA32U2.impl;
 
-		FrskyTelemetry: device FrskyTelemetry;
 		MagnetometerMC5843: device MagnetometerMC5843;
 		BarometerMS5611: device BarometerMS5611;
 		AccelerometerMPU6000: device AccelerometerMPU6000;
+		
+
+		FrskyTelemetry: device FrskyTelemetry;
+
 		USB: device Com2USB;
 		GPS: device GPS;
 		SPI0: bus SPI;
