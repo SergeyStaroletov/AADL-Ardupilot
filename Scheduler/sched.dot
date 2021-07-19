@@ -1,0 +1,84 @@
+digraph G {
+
+s [label = "Run one tick"];
+s1 [label = "run_started_usec = hal.scheduler->micros();\nnow = run_started_usec"  shape="rectangle"];
+s->s1;
+s2 [label = "i = 0"  shape="rectangle"];
+s1->s2;
+s3 [label = "i<num_tasks" shape=""];
+s2->s3;
+s4 [label = "dt = tick_counter - last_run[i]" shape="rectangle"];
+s3->s4 [label = " true"];
+s5 [label = "interval_ticks = tasks[i].interval_ticks"  shape="rectangle"];
+s4->s5;
+s6 [label = "dt >= interval_ticks"];
+s5->s6;
+s6->ss;
+
+s7 [label = "task_time_allowed = tasks[i].max_time_micros"  shape="rectangle"];
+s6->s7 [label = " true"];
+s8 [label = "dt >= (interval_ticks * 2)"  ];
+s7->s8;
+s9 [label = "We've slipped a whole run of this task!"];
+s8->s9 [label = " true"];
+s10 [label = "task_time_allowed <= time_available"  shape="rectangle"];
+s10->ss [label = " false"];
+s8->s10;
+s9->s10;
+s11[label = "task_time_started = now"  shape="rectangle"  shape="rectangle"];
+s10 -> s11 [label = " true"];
+s12 [label = "func = tasks[i].function"];
+s11->s12;
+s13 [label = "current_task = i;\nfunc();\ncurrent_task = -1"  shape="rectangle"];
+s12->s13;
+s14 [label = "last_run[i] = tick_counter"  shape="rectangle"];
+s13->s14;
+s15 [label = "now = hal.scheduler->micros()\nuint32_t time_taken = now - _task_time_started"  shape="rectangle"]
+s14->s15;
+s16 [label = "time_taken > task_time_allowed"];
+s15->s16 ;
+s17 [label = "Scheduler overrun task!"];
+s16 ->s17 [label = "true"];
+s18 [label = "time_taken >= time_available"];
+s16->s18;
+s17->s18;
+s19 [label = "time_available -= time_taken"  shape="rectangle"];
+s18->s19 [label = " false"];
+#s19->s20;
+s19->ss;
+ss [label = "i++"  shape="rectangle"];
+
+#ss->s20;
+
+ss->s3;
+
+s3->s20;
+
+s20 [label = "spare_micros += time_available"  shape="rectangle"];
+
+s21 [label = "spare_ticks++"  shape="rectangle"];
+s20->s21;
+s18->s21;
+s22 [label = "spare_ticks == 32"];
+s21->s22;
+s23 [label = "spare_ticks /= 2\nspare_micros /= 2"  shape="rectangle"]
+s22->s23 [label = " true"];
+s23->s24;
+s22->s24;
+s24 [label = "End" shape = "doublecircle"];
+
+note1[label = "This task is due to run.\nDo we have enough time \nto run it?" style="dotted"];
+note1->s7 [style="dotted" arrowhead=none];
+
+note2[label = "Run it" style="dotted"];
+note2->s11 [style="dotted" arrowhead=none];
+
+note3[label = "Record the tick counter when we ran.\nThis drives when we next \nrun the event" style="dotted"];
+note3->s14 [style="dotted" arrowhead=none];
+
+
+note4[label = "Work out how long the event\nactually took" style="dotted"];
+note4->s15 [style="dotted" arrowhead=none];
+
+
+}
