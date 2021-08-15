@@ -48,7 +48,7 @@ typedef Task {
 
 #define num_tasks 31
 #define MAIN_LOOP_MICROS 10000
-#define max_sim 10 
+#define max_sim 100000 
 
 Task task[num_tasks];
 
@@ -223,7 +223,7 @@ inline rnd (max, ret) {
     do
         ::(r < max) -> r++;
         ::(r > 0) -> r--; 
-        ::true -> break; //non-deterministic exit
+        ::(r > 0) -> break; //non-deterministic exit
     od
     ret = r;
 }
@@ -258,7 +258,7 @@ inline task_func(id) {
 inline run_tick(time_available) {
     int run_started_usec  = micros;
     int now = run_started_usec;
-    short i;
+    short i = 0;
     do
         ::(i < num_tasks) -> {
             int dt = tick_counter - last_run[i];//?
@@ -273,6 +273,7 @@ inline run_tick(time_available) {
                             printf("!\n");
                             slipped++;
                         } 
+                        ::else -> skip;
                     fi
                     
                     if
@@ -298,13 +299,13 @@ inline run_tick(time_available) {
                                 ::(time_taken > time_available) -> break;
                                 ::else -> time_available = time_available - time_taken;
                             fi
-                            i++;
                         }
                         ::else -> skip
                     fi
                 }
                 ::else -> skip  
             fi
+            i++;
         } 
         ::else -> break
     od
@@ -315,6 +316,7 @@ inline run_tick(time_available) {
             spare_ticks = spare_ticks / 2;
             spare_micros = spare_micros / 2;
         }
+        ::else -> skip
     fi
 }
 
@@ -329,7 +331,10 @@ inline loop() {
 active proctype main() {
     setup_tasks();
     //todo: run loop for some bounded time
-    loop();
+    do 
+        ::(micros < max_sim) -> loop();
+        ::else -> break
+    od
 }
 
 
