@@ -1,0 +1,8 @@
+true: package(str), package(unix), package(num), package(bigarray)
+true: bin_annot, color(always)
+<contrib/spinfer/**>: include
+<contrib/coccinelle/**> and not <contrib/coccinelle/tests> and not <contrib/coccinelle/demos>: include
+<contrib/coccinelle/bundles>: -include
+<contrib/coccinelle/bundles>: -traverse
+<Deckard/**>: not_hygienic
+<bundles/**>: not_hygienic
