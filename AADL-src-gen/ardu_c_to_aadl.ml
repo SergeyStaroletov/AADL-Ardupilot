@@ -458,10 +458,10 @@ fun k ->
 
     if (List.length vars > 0) then
     begin
-       	Printf.printf "features \n";
-        List.iter (
-          fun v -> 
-            Printf.printf " port thr.%s    -> %s; \n" v v
+       	Printf.printf "connections \n";
+        List.iteri (
+          fun i v -> 
+            Printf.printf " p%d: port thr.%s    -> %s; \n" i v v
         ) vars
     end;
 
@@ -478,6 +478,7 @@ List.iteri  (
 
 Printf.printf "connections \n";
 
+let ci = ref 0 in 
 List.iter (
   fun fn -> 
     let var_set = try Hashtbl.find hash_fun2set2 fn with Not_found -> [] in
@@ -486,9 +487,12 @@ List.iter (
         (* find all components where a var from var_set is used in var_get and print them *)
         List.iter (
             fun fn2 ->
-              let var_get = try Hashtbl.find hash_fun2get2 fn with Not_found -> [] in
-              if (List.mem vs var_get) then
-                Printf.printf "   port %s.%s   -> %s.%s; \n" fn vs fn2 vs
+              let var_get = try Hashtbl.find hash_fun2get2 fn2 with Not_found -> [] in
+              if (fn <> fn2) && (List.mem vs var_get) then
+                begin
+                  Printf.printf "  c%d: port prs_%s.%s   -> prs_%s.%s; \n" !ci fn vs fn2 vs;
+                  ci := !ci + 1
+                end
         ) func_of_interest
     ) var_set
 ) func_of_interest;
