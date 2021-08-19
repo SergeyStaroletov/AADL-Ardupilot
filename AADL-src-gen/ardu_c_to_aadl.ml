@@ -6,10 +6,10 @@ let func_of_interest = ["rc_loop"  ;  "throttle_loop"; "update_GPS"; "update_bat
  "auto_trim"; "update_altitude"; "run_nav_updates"; "update_thr_cruise"; "three_hz_loop"; "compass_accumulate";
  "barometer_accumulate"; "update_notify"; "one_hz_loop"; "ekf_dcm_check"; "crash_check"; "gcs_check_input";
  "gcs_send_heartbeat"; "gcs_send_deferred"; "gcs_data_stream_send"; "update_mount"; "ten_hz_logging_loop"; 
- "fifty_hz_logging_loop"; "perf_update";"read_receiver_rssi"; "telemetry_send"  ] in
+ "fifty_hz_logging_loop"; "perf_update";"read_receiver_rssi"; "telemetry_send"  ] 
 
-let intervals = [4;8;8;40;40;40;40;40;8;40;133;8;8;8;400;40;40;8;400;8;8;8;40;8;40;80;4;8;40;120;400] in
-let max_times = [10;45;90;72;5;1;14;100;80;10;9;42;25;10;42;2;2;550;150;720;950;45;30;22;5;10;10;10;10;10;10] in
+let intervals = [4;8;8;40;40;40;40;40;8;40;133;8;8;8;400;40;40;8;400;8;8;8;40;8;40;80;4;8;40;120;400] 
+let max_times = [10;45;90;72;5;1;14;100;80;10;9;42;25;10;42;2;2;550;150;720;950;45;30;22;5;10;10;10;10;10;10] 
 
 
 type control_flow_graph = Control_flow_c.cflow
@@ -392,6 +392,8 @@ fun k ->
 
   Printf.printf "package apm_system \n";
   Printf.printf "public \n";
+
+  Printf.printf "with poklib; \n";
 	
 	Printf.printf "system APM_2_6 \n";
 	Printf.printf "end APM_2_6; \n";
@@ -404,20 +406,65 @@ fun k ->
     Printf.printf "-- %s \n" fn;
     Printf.printf "\n";
  	  Printf.printf "thread thr_%s \n" fn;
+    
+    let var_set = try Hashtbl.find hash_fun2set2 fn with Not_found -> [] in
+    let var_get = try Hashtbl.find hash_fun2get2 fn with Not_found -> [] in
+
+    (*let vars = var_set @ var_get in*)
+    let vars = ref [] in
+    vars := !vars @ var_set;
+    List.iter (
+      fun x -> if not (List.mem x !vars) then vars := !vars @ [x]
+    ) var_get;
+    let vars = !vars in 
+
+
+    if (List.length vars > 0) then
+    begin
+       	Printf.printf "features \n";
+        List.iter (
+          fun v -> 
+            Printf.printf " %s    :  in out data port poklib::float; \n" v
+        ) vars
+    end;
+
    	Printf.printf "properties \n";
     Printf.printf "  Dispatch_Protocol => Periodic; \n";
     Printf.printf "  Compute_Execution_Time => 0 ms .. %d ms; \n" (List.nth max_times i);
     Printf.printf "  Period => %d Ms; -- 1000 / (100 / x) = 10 * x = 10 * %d \n" (10*(List.nth intervals i)) (List.nth intervals i);
     Printf.printf "end thr_%s; \n" fn;
+
    	Printf.printf "thread implementation thr_%s.i \n" fn;
    	Printf.printf "end thr_%s.i; \n" fn;
     Printf.printf " \n";
+
 	  Printf.printf "process process_%s \n" fn;
+
+    if (List.length vars > 0) then
+    begin
+       	Printf.printf "features \n";
+        List.iter (
+          fun v -> 
+            Printf.printf " %s    :  in out data port poklib::float; \n" v
+        ) vars
+    end;
+
 	  Printf.printf "end process_%s; \n" fn;
     Printf.printf " \n";
+
 	  Printf.printf "process implementation process_%s.i  \n" fn;
 		Printf.printf "subcomponents \n";
 		Printf.printf "thr: thread thr_%s.i; \n" fn;
+
+    if (List.length vars > 0) then
+    begin
+       	Printf.printf "features \n";
+        List.iter (
+          fun v -> 
+            Printf.printf " port thr.%s    -> %s; \n" v v
+        ) vars
+    end;
+
 	  Printf.printf "end process_%s.i; \n\n" fn
   ) func_of_interest;
 
@@ -430,6 +477,22 @@ List.iteri  (
 ) func_of_interest;
 
 Printf.printf "connections \n";
+
+List.iter (
+  fun fn -> 
+    let var_set = try Hashtbl.find hash_fun2set2 fn with Not_found -> [] in
+    List.iter (
+      fun vs ->
+        (* find all components where a var from var_set is used in var_get and print them *)
+        List.iter (
+            fun fn2 ->
+              let var_get = try Hashtbl.find hash_fun2get2 fn with Not_found -> [] in
+              if (List.mem vs var_get) then
+                Printf.printf "   port %s.%s   -> %s.%s; \n" fn vs fn2 vs
+        ) func_of_interest
+    ) var_set
+) func_of_interest;
+
 Printf.printf "end APM_2_6.i; \n";
 Printf.printf " \n";
 Printf.printf "end apm_system; \n"
