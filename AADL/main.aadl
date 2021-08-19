@@ -1,582 +1,869 @@
--- Created by Sergey Staroletov 2019,2021
+package apm_system 
+public 
+with poklib; 
+system APM_2_6 
+end APM_2_6; 
+ 
+-- rc_loop 
 
-package apm_system
-public
-	
-	system APM_2_6
-	end APM_2_6;
-	
-	
--- rc_loop
-	
- 	thread thr_rc_loop
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 100 ms;
-      Period => 10 Ms; -- 1000 / (100 / x) = 10 * x
-    end thr_rc_loop;
-   	thread implementation thr_rc_loop.i
-   	end thr_rc_loop.i;
-	
-	process process_rc_loop
-	end process_rc_loop;
+thread thr_rc_loop 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 10 ms; 
+  Period => 40 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 4 
+end thr_rc_loop; 
+thread implementation thr_rc_loop.i 
+end thr_rc_loop.i; 
+ 
+process process_rc_loop 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+end process_rc_loop; 
+ 
+process implementation process_rc_loop.i  
+subcomponents 
+thr: thread thr_rc_loop.i; 
+connections 
+ p0: port thr.orig_roll_rp    -> orig_roll_rp; 
+ p1: port thr.orig_roll_ri    -> orig_roll_ri; 
+ p2: port thr.orig_roll_rd    -> orig_roll_rd; 
+ p3: port thr.orig_roll_sp    -> orig_roll_sp; 
+ p4: port thr.orig_pitch_rp    -> orig_pitch_rp; 
+ p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
+ p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
+ p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+end process_rc_loop.i; 
 
-	process implementation process_rc_loop.i
-		subcomponents
-		thr: thread thr_rc_loop.i;
-	end process_rc_loop.i;
-	
-	
--- throttle_loop
+ 
+-- throttle_loop 
 
- 	thread thr_throttle_loop
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 450 ms;
-      Period => 20 Ms;
-    end thr_throttle_loop;
-   	thread implementation thr_throttle_loop.i
-   	end thr_throttle_loop.i;
-	
-	process process_throttle_loop
-	end process_throttle_loop;
+thread thr_throttle_loop 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 45 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_throttle_loop; 
+thread implementation thr_throttle_loop.i 
+end thr_throttle_loop.i; 
+ 
+process process_throttle_loop 
+end process_throttle_loop; 
+ 
+process implementation process_throttle_loop.i  
+subcomponents 
+thr: thread thr_throttle_loop.i; 
+end process_throttle_loop.i; 
 
-	process implementation process_throttle_loop.i
-		subcomponents
-		thr: thread thr_throttle_loop.i;
-	end process_throttle_loop.i;
-	
-
+ 
 -- update_GPS 
 
- 	thread thr_update_GPS
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 900 ms;
-      Period => 20 Ms;
-    end thr_update_GPS;
-   	thread implementation thr_update_GPS.i
-   	end thr_update_GPS.i;
-	
-	process process_update_GPS
-	end process_update_GPS;
+thread thr_update_GPS 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 90 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_update_GPS; 
+thread implementation thr_update_GPS.i 
+end thr_update_GPS.i; 
+ 
+process process_update_GPS 
+end process_update_GPS; 
+ 
+process implementation process_update_GPS.i  
+subcomponents 
+thr: thread thr_update_GPS.i; 
+end process_update_GPS.i; 
 
-	process implementation process_update_GPS.i
-		subcomponents
-		thr: thread thr_update_GPS.i;
-	end process_update_GPS.i;
-	
-	
+ 
 -- update_batt_compass 
 
- 	thread thr_update_batt_compass
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 720 ms;
-      Period => 100 Ms;
-    end thr_update_batt_compass;
-   	thread implementation thr_update_batt_compass.i
-   	end thr_update_batt_compass.i;
-	
-	process process_update_batt_compass
-	end process_update_batt_compass;
+thread thr_update_batt_compass 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 72 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_update_batt_compass; 
+thread implementation thr_update_batt_compass.i 
+end thr_update_batt_compass.i; 
+ 
+process process_update_batt_compass 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+end process_update_batt_compass; 
+ 
+process implementation process_update_batt_compass.i  
+subcomponents 
+thr: thread thr_update_batt_compass.i; 
+connections 
+ p0: port thr.orig_roll_rp    -> orig_roll_rp; 
+ p1: port thr.orig_roll_ri    -> orig_roll_ri; 
+ p2: port thr.orig_roll_rd    -> orig_roll_rd; 
+ p3: port thr.orig_roll_sp    -> orig_roll_sp; 
+ p4: port thr.orig_pitch_rp    -> orig_pitch_rp; 
+ p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
+ p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
+ p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+end process_update_batt_compass.i; 
 
-	process implementation process_update_batt_compass.i
-		subcomponents
-		thr: thread thr_update_batt_compass.i;
-	end process_update_batt_compass.i;
-	
-	
--- read_aux_switches  
+ 
+-- arm_motors_check 
 
- 	thread thr_read_aux_switches
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 50 ms;
-      Period => 100 Ms;
-    end thr_read_aux_switches;
-   	thread implementation thr_read_aux_switches.i
-   	end thr_read_aux_switches.i;
-	
-	process process_read_aux_switches
-	end process_read_aux_switches;
+thread thr_arm_motors_check 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 5 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_arm_motors_check; 
+thread implementation thr_arm_motors_check.i 
+end thr_arm_motors_check.i; 
+ 
+process process_arm_motors_check 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+end process_arm_motors_check; 
+ 
+process implementation process_arm_motors_check.i  
+subcomponents 
+thr: thread thr_arm_motors_check.i; 
+connections 
+ p0: port thr.orig_roll_rp    -> orig_roll_rp; 
+ p1: port thr.orig_roll_ri    -> orig_roll_ri; 
+ p2: port thr.orig_roll_rd    -> orig_roll_rd; 
+ p3: port thr.orig_roll_sp    -> orig_roll_sp; 
+ p4: port thr.orig_pitch_rp    -> orig_pitch_rp; 
+ p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
+ p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
+ p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+end process_arm_motors_check.i; 
 
-	process implementation process_read_aux_switches.i
-		subcomponents
-		thr: thread thr_read_aux_switches.i;
-	end process_read_aux_switches.i;
+ 
+-- auto_trim 
 
+thread thr_auto_trim 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 1 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_auto_trim; 
+thread implementation thr_auto_trim.i 
+end thr_auto_trim.i; 
+ 
+process process_auto_trim 
+end process_auto_trim; 
+ 
+process implementation process_auto_trim.i  
+subcomponents 
+thr: thread thr_auto_trim.i; 
+end process_auto_trim.i; 
 
--- arm_motors_check
+ 
+-- update_altitude 
 
- 	thread thr_arm_motors_check
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 10 ms;
-      Period => 100 Ms;
-    end thr_arm_motors_check;
-   	thread implementation thr_arm_motors_check.i
-   	end thr_arm_motors_check.i;
-	
-	process process_arm_motors_check
-	end process_arm_motors_check;
+thread thr_update_altitude 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 14 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_update_altitude; 
+thread implementation thr_update_altitude.i 
+end thr_update_altitude.i; 
+ 
+process process_update_altitude 
+end process_update_altitude; 
+ 
+process implementation process_update_altitude.i  
+subcomponents 
+thr: thread thr_update_altitude.i; 
+end process_update_altitude.i; 
 
-	process implementation process_arm_motors_check.i
-		subcomponents
-		thr: thread thr_arm_motors_check.i;
-	end process_arm_motors_check.i;
+ 
+-- run_nav_updates 
 
+thread thr_run_nav_updates 
+features 
+ home_distance    :  in out data port poklib::float; 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 100 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_run_nav_updates; 
+thread implementation thr_run_nav_updates.i 
+end thr_run_nav_updates.i; 
+ 
+process process_run_nav_updates 
+features 
+ home_distance    :  in out data port poklib::float; 
+end process_run_nav_updates; 
+ 
+process implementation process_run_nav_updates.i  
+subcomponents 
+thr: thread thr_run_nav_updates.i; 
+connections 
+ p0: port thr.home_distance    -> home_distance; 
+end process_run_nav_updates.i; 
 
---  auto_trim
-
- 	thread thr_auto_trim
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 140 ms;
-      Period => 100 Ms;
-    end thr_auto_trim;
-   	thread implementation thr_auto_trim.i
-   	end thr_auto_trim.i;
-	
-	process process_auto_trim
-	end process_auto_trim;
-
-	process implementation process_auto_trim.i
-		subcomponents
-		thr: thread thr_auto_trim.i;
-	end process_auto_trim.i;
-
-
--- update_altitude
-
- 	thread thr_update_altitude
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 1000 ms;
-      Period => 100 Ms;
-    end thr_update_altitude;
-   	thread implementation thr_update_altitude.i
-   	end thr_update_altitude.i;
-	
-	process process_update_altitude
-	end process_update_altitude;
-
-	process implementation process_update_altitude.i
-		subcomponents
-		thr: thread thr_update_altitude.i;
-	end process_update_altitude.i;
-
-
--- run_nav_updates
-
- 	thread thr_run_nav_updates
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 800 ms;
-      Period => 40 Ms;
-    end thr_run_nav_updates;
-   	thread implementation thr_run_nav_updates.i
-   	end thr_run_nav_updates.i;
-	
-	process process_run_nav_updates
-	end process_run_nav_updates;
-
-	process implementation process_run_nav_updates.i
-		subcomponents
-		thr: thread thr_run_nav_updates.i;
-	end process_run_nav_updates.i;
-
-
+ 
 -- update_thr_cruise 
 
- 	thread thr_update_thr_cruise
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 50 ms;
-      Period => 10 Ms;
-    end thr_update_thr_cruise;
-   	thread implementation thr_update_thr_cruise.i
-   	end thr_update_thr_cruise.i;
-	
-	process process_update_thr_cruise
-	end process_update_thr_cruise;
+thread thr_update_thr_cruise 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 80 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_update_thr_cruise; 
+thread implementation thr_update_thr_cruise.i 
+end thr_update_thr_cruise.i; 
+ 
+process process_update_thr_cruise 
+end process_update_thr_cruise; 
+ 
+process implementation process_update_thr_cruise.i  
+subcomponents 
+thr: thread thr_update_thr_cruise.i; 
+end process_update_thr_cruise.i; 
 
-	process implementation process_update_thr_cruise.i
-		subcomponents
-		thr: thread thr_update_thr_cruise.i;
-	end process_update_thr_cruise.i;
-
-
+ 
 -- three_hz_loop 
 
- 	thread thr_three_hz_loop
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 90 ms;
-      Period => 330 Ms;
-    end thr_three_hz_loop;
-   	thread implementation thr_three_hz_loop.i
-   	end thr_three_hz_loop.i;
-	
-	process process_three_hz_loop
-	end process_three_hz_loop;
+thread thr_three_hz_loop 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+ home_distance    :  in out data port poklib::float; 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 10 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_three_hz_loop; 
+thread implementation thr_three_hz_loop.i 
+end thr_three_hz_loop.i; 
+ 
+process process_three_hz_loop 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+ home_distance    :  in out data port poklib::float; 
+end process_three_hz_loop; 
+ 
+process implementation process_three_hz_loop.i  
+subcomponents 
+thr: thread thr_three_hz_loop.i; 
+connections 
+ p0: port thr.orig_roll_rp    -> orig_roll_rp; 
+ p1: port thr.orig_roll_ri    -> orig_roll_ri; 
+ p2: port thr.orig_roll_rd    -> orig_roll_rd; 
+ p3: port thr.orig_roll_sp    -> orig_roll_sp; 
+ p4: port thr.orig_pitch_rp    -> orig_pitch_rp; 
+ p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
+ p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
+ p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+ p8: port thr.home_distance    -> home_distance; 
+end process_three_hz_loop.i; 
 
-	process implementation process_three_hz_loop.i
-		subcomponents
-		thr: thread thr_three_hz_loop.i;
-	end process_three_hz_loop.i;
+ 
+-- compass_accumulate 
 
+thread thr_compass_accumulate 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 9 ms; 
+  Period => 1330 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 133 
+end thr_compass_accumulate; 
+thread implementation thr_compass_accumulate.i 
+end thr_compass_accumulate.i; 
+ 
+process process_compass_accumulate 
+end process_compass_accumulate; 
+ 
+process implementation process_compass_accumulate.i  
+subcomponents 
+thr: thread thr_compass_accumulate.i; 
+end process_compass_accumulate.i; 
 
--- compass_accumulate
+ 
+-- barometer_accumulate 
 
- 	thread thr_compass_accumulate
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 420 ms;
-      Period => 20 Ms;
-    end thr_compass_accumulate;
-   	thread implementation thr_compass_accumulate.i
-   	end thr_compass_accumulate.i;
-	
-	process process_compass_accumulate
-	end process_compass_accumulate;
+thread thr_barometer_accumulate 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 42 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_barometer_accumulate; 
+thread implementation thr_barometer_accumulate.i 
+end thr_barometer_accumulate.i; 
+ 
+process process_barometer_accumulate 
+end process_barometer_accumulate; 
+ 
+process implementation process_barometer_accumulate.i  
+subcomponents 
+thr: thread thr_barometer_accumulate.i; 
+end process_barometer_accumulate.i; 
 
-	process implementation process_compass_accumulate.i
-		subcomponents
-		thr: thread thr_compass_accumulate.i;
-	end process_compass_accumulate.i;
-
-
--- barometer_accumulate
-
- 	thread thr_barometer_accumulate
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 250 ms;
-      Period => 20 Ms;
-    end thr_barometer_accumulate;
-   	thread implementation thr_barometer_accumulate.i
-   	end thr_barometer_accumulate.i;
-	
-	process process_barometer_accumulate
-	end process_barometer_accumulate;
-
-	process implementation process_barometer_accumulate.i
-		subcomponents
-		thr: thread thr_barometer_accumulate.i;
-	end process_barometer_accumulate.i;
-
-
+ 
 -- update_notify 
 
- 	thread thr_update_notify
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 100 ms;
-      Period => 20 Ms;
-    end thr_update_notify;
-   	thread implementation thr_update_notify.i
-   	end thr_update_notify.i;
-	
-	process process_update_notify
-	end process_update_notify;
+thread thr_update_notify 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 25 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_update_notify; 
+thread implementation thr_update_notify.i 
+end thr_update_notify.i; 
+ 
+process process_update_notify 
+end process_update_notify; 
+ 
+process implementation process_update_notify.i  
+subcomponents 
+thr: thread thr_update_notify.i; 
+end process_update_notify.i; 
 
-	process implementation process_update_notify.i
-		subcomponents
-		thr: thread thr_update_notify.i;
-	end process_update_notify.i;
+ 
+-- one_hz_loop 
+
+thread thr_one_hz_loop 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 10 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_one_hz_loop; 
+thread implementation thr_one_hz_loop.i 
+end thr_one_hz_loop.i; 
+ 
+process process_one_hz_loop 
+end process_one_hz_loop; 
+ 
+process implementation process_one_hz_loop.i  
+subcomponents 
+thr: thread thr_one_hz_loop.i; 
+end process_one_hz_loop.i; 
+
+ 
+-- ekf_dcm_check 
+
+thread thr_ekf_dcm_check 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 42 ms; 
+  Period => 4000 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 400 
+end thr_ekf_dcm_check; 
+thread implementation thr_ekf_dcm_check.i 
+end thr_ekf_dcm_check.i; 
+ 
+process process_ekf_dcm_check 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+end process_ekf_dcm_check; 
+ 
+process implementation process_ekf_dcm_check.i  
+subcomponents 
+thr: thread thr_ekf_dcm_check.i; 
+connections 
+ p0: port thr.orig_roll_rp    -> orig_roll_rp; 
+ p1: port thr.orig_roll_ri    -> orig_roll_ri; 
+ p2: port thr.orig_roll_rd    -> orig_roll_rd; 
+ p3: port thr.orig_roll_sp    -> orig_roll_sp; 
+ p4: port thr.orig_pitch_rp    -> orig_pitch_rp; 
+ p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
+ p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
+ p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+end process_ekf_dcm_check.i; 
+
+ 
+-- crash_check 
+
+thread thr_crash_check 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 2 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_crash_check; 
+thread implementation thr_crash_check.i 
+end thr_crash_check.i; 
+ 
+process process_crash_check 
+features 
+ orig_roll_rp    :  in out data port poklib::float; 
+ orig_roll_ri    :  in out data port poklib::float; 
+ orig_roll_rd    :  in out data port poklib::float; 
+ orig_roll_sp    :  in out data port poklib::float; 
+ orig_pitch_rp    :  in out data port poklib::float; 
+ orig_pitch_ri    :  in out data port poklib::float; 
+ orig_pitch_rd    :  in out data port poklib::float; 
+ orig_pitch_sp    :  in out data port poklib::float; 
+end process_crash_check; 
+ 
+process implementation process_crash_check.i  
+subcomponents 
+thr: thread thr_crash_check.i; 
+connections 
+ p0: port thr.orig_roll_rp    -> orig_roll_rp; 
+ p1: port thr.orig_roll_ri    -> orig_roll_ri; 
+ p2: port thr.orig_roll_rd    -> orig_roll_rd; 
+ p3: port thr.orig_roll_sp    -> orig_roll_sp; 
+ p4: port thr.orig_pitch_rp    -> orig_pitch_rp; 
+ p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
+ p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
+ p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+end process_crash_check.i; 
+
+ 
+-- gcs_check_input 
+
+thread thr_gcs_check_input 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 2 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_gcs_check_input; 
+thread implementation thr_gcs_check_input.i 
+end thr_gcs_check_input.i; 
+ 
+process process_gcs_check_input 
+end process_gcs_check_input; 
+ 
+process implementation process_gcs_check_input.i  
+subcomponents 
+thr: thread thr_gcs_check_input.i; 
+end process_gcs_check_input.i; 
+
+ 
+-- gcs_send_heartbeat 
+
+thread thr_gcs_send_heartbeat 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 550 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_gcs_send_heartbeat; 
+thread implementation thr_gcs_send_heartbeat.i 
+end thr_gcs_send_heartbeat.i; 
+ 
+process process_gcs_send_heartbeat 
+end process_gcs_send_heartbeat; 
+ 
+process implementation process_gcs_send_heartbeat.i  
+subcomponents 
+thr: thread thr_gcs_send_heartbeat.i; 
+end process_gcs_send_heartbeat.i; 
+
+ 
+-- gcs_send_deferred 
+
+thread thr_gcs_send_deferred 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 150 ms; 
+  Period => 4000 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 400 
+end thr_gcs_send_deferred; 
+thread implementation thr_gcs_send_deferred.i 
+end thr_gcs_send_deferred.i; 
+ 
+process process_gcs_send_deferred 
+end process_gcs_send_deferred; 
+ 
+process implementation process_gcs_send_deferred.i  
+subcomponents 
+thr: thread thr_gcs_send_deferred.i; 
+end process_gcs_send_deferred.i; 
+
+ 
+-- gcs_data_stream_send 
+
+thread thr_gcs_data_stream_send 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 720 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_gcs_data_stream_send; 
+thread implementation thr_gcs_data_stream_send.i 
+end thr_gcs_data_stream_send.i; 
+ 
+process process_gcs_data_stream_send 
+end process_gcs_data_stream_send; 
+ 
+process implementation process_gcs_data_stream_send.i  
+subcomponents 
+thr: thread thr_gcs_data_stream_send.i; 
+end process_gcs_data_stream_send.i; 
+
+ 
+-- update_mount 
+
+thread thr_update_mount 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 950 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_update_mount; 
+thread implementation thr_update_mount.i 
+end thr_update_mount.i; 
+ 
+process process_update_mount 
+end process_update_mount; 
+ 
+process implementation process_update_mount.i  
+subcomponents 
+thr: thread thr_update_mount.i; 
+end process_update_mount.i; 
+
+ 
+-- ten_hz_logging_loop 
+
+thread thr_ten_hz_logging_loop 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 45 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_ten_hz_logging_loop; 
+thread implementation thr_ten_hz_logging_loop.i 
+end thr_ten_hz_logging_loop.i; 
+ 
+process process_ten_hz_logging_loop 
+end process_ten_hz_logging_loop; 
+ 
+process implementation process_ten_hz_logging_loop.i  
+subcomponents 
+thr: thread thr_ten_hz_logging_loop.i; 
+end process_ten_hz_logging_loop.i; 
+
+ 
+-- fifty_hz_logging_loop 
+
+thread thr_fifty_hz_logging_loop 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 30 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_fifty_hz_logging_loop; 
+thread implementation thr_fifty_hz_logging_loop.i 
+end thr_fifty_hz_logging_loop.i; 
+ 
+process process_fifty_hz_logging_loop 
+end process_fifty_hz_logging_loop; 
+ 
+process implementation process_fifty_hz_logging_loop.i  
+subcomponents 
+thr: thread thr_fifty_hz_logging_loop.i; 
+end process_fifty_hz_logging_loop.i; 
+
+ 
+-- perf_update 
+
+thread thr_perf_update 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 22 ms; 
+  Period => 80 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 8 
+end thr_perf_update; 
+thread implementation thr_perf_update.i 
+end thr_perf_update.i; 
+ 
+process process_perf_update 
+end process_perf_update; 
+ 
+process implementation process_perf_update.i  
+subcomponents 
+thr: thread thr_perf_update.i; 
+end process_perf_update.i; 
+
+ 
+-- read_receiver_rssi 
+
+thread thr_read_receiver_rssi 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 5 ms; 
+  Period => 400 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 40 
+end thr_read_receiver_rssi; 
+thread implementation thr_read_receiver_rssi.i 
+end thr_read_receiver_rssi.i; 
+ 
+process process_read_receiver_rssi 
+end process_read_receiver_rssi; 
+ 
+process implementation process_read_receiver_rssi.i  
+subcomponents 
+thr: thread thr_read_receiver_rssi.i; 
+end process_read_receiver_rssi.i; 
+
+ 
+-- telemetry_send 
+
+thread thr_telemetry_send 
+properties 
+  Dispatch_Protocol => Periodic; 
+  Compute_Execution_Time => 0 ms .. 10 ms; 
+  Period => 800 Ms; -- 1000 / (100 / x) = 10 * x = 10 * 80 
+end thr_telemetry_send; 
+thread implementation thr_telemetry_send.i 
+end thr_telemetry_send.i; 
+ 
+process process_telemetry_send 
+end process_telemetry_send; 
+ 
+process implementation process_telemetry_send.i  
+subcomponents 
+thr: thread thr_telemetry_send.i; 
+end process_telemetry_send.i; 
 
 
--- one_hz_loop
+system implementation APM_2_6.i 
+subcomponents 
+prs_rc_loop        : process   process_rc_loop.i; 
+prs_throttle_loop        : process   process_throttle_loop.i; 
+prs_update_GPS        : process   process_update_GPS.i; 
+prs_update_batt_compass        : process   process_update_batt_compass.i; 
+prs_arm_motors_check        : process   process_arm_motors_check.i; 
+prs_auto_trim        : process   process_auto_trim.i; 
+prs_update_altitude        : process   process_update_altitude.i; 
+prs_run_nav_updates        : process   process_run_nav_updates.i; 
+prs_update_thr_cruise        : process   process_update_thr_cruise.i; 
+prs_three_hz_loop        : process   process_three_hz_loop.i; 
+prs_compass_accumulate        : process   process_compass_accumulate.i; 
+prs_barometer_accumulate        : process   process_barometer_accumulate.i; 
+prs_update_notify        : process   process_update_notify.i; 
+prs_one_hz_loop        : process   process_one_hz_loop.i; 
+prs_ekf_dcm_check        : process   process_ekf_dcm_check.i; 
+prs_crash_check        : process   process_crash_check.i; 
+prs_gcs_check_input        : process   process_gcs_check_input.i; 
+prs_gcs_send_heartbeat        : process   process_gcs_send_heartbeat.i; 
+prs_gcs_send_deferred        : process   process_gcs_send_deferred.i; 
+prs_gcs_data_stream_send        : process   process_gcs_data_stream_send.i; 
+prs_update_mount        : process   process_update_mount.i; 
+prs_ten_hz_logging_loop        : process   process_ten_hz_logging_loop.i; 
+prs_fifty_hz_logging_loop        : process   process_fifty_hz_logging_loop.i; 
+prs_perf_update        : process   process_perf_update.i; 
+prs_read_receiver_rssi        : process   process_read_receiver_rssi.i; 
+prs_telemetry_send        : process   process_telemetry_send.i; 
+connections 
 
- 	thread thr_one_hz_loop
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 420 ms;
-      Period => 1000 Ms;
-    end thr_one_hz_loop;
-   	thread implementation thr_one_hz_loop.i
-   	end thr_one_hz_loop.i;
-	
-	process process_one_hz_loop
-	end process_one_hz_loop;
-
-	process implementation process_one_hz_loop.i
-		subcomponents
-		thr: thread thr_one_hz_loop.i;
-	end process_one_hz_loop.i;
-
-
--- ekf_dcm_check
-
- 	thread thr_ekf_dcm_check
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 20 ms;
-      Period => 100 Ms;
-    end thr_ekf_dcm_check;
-   	thread implementation thr_ekf_dcm_check.i
-   	end thr_ekf_dcm_check.i;
-	
-	process process_ekf_dcm_check
-	end process_ekf_dcm_check;
-
-	process implementation process_ekf_dcm_check.i
-		subcomponents
-		thr: thread thr_ekf_dcm_check.i;
-	end process_ekf_dcm_check.i;
-
-
--- crash_check
-
- 	thread thr_crash_check
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 20 ms;
-      Period => 100 Ms;
-    end thr_crash_check;
-   	thread implementation thr_crash_check.i
-   	end thr_crash_check.i;
-	
-	process process_crash_check
-	end process_crash_check;
-
-	process implementation process_crash_check.i
-		subcomponents
-		thr: thread thr_crash_check.i;
-	end process_crash_check.i;
-
-
--- gcs_check_input
-
- 	thread thr_gcs_check_input
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 550 ms;
-      Period => 20 Ms;
-    end thr_gcs_check_input;
-   	thread implementation thr_gcs_check_input.i
-   	end thr_gcs_check_input.i;
-	
-	process process_gcs_check_input
-	end process_gcs_check_input;
-
-	process implementation process_gcs_check_input.i
-		subcomponents
-		thr: thread thr_gcs_check_input.i;
-	end process_gcs_check_input.i;
-
-
--- gcs_send_heartbeat
-
- 	thread thr_gcs_send_heartbeat
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 150 ms;
-      Period => 1000 Ms;
-    end thr_gcs_send_heartbeat;
-   	thread implementation thr_gcs_send_heartbeat.i
-   	end thr_gcs_send_heartbeat.i;
-	
-	process process_gcs_send_heartbeat
-	end process_gcs_send_heartbeat;
-
-	process implementation process_gcs_send_heartbeat.i
-		subcomponents
-		thr: thread thr_gcs_send_heartbeat.i;
-	end process_gcs_send_heartbeat.i;
-
-
--- gcs_send_deferred
-
- 	thread thr_gcs_send_deferred
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 720 ms;
-      Period => 20 Ms;
-    end thr_gcs_send_deferred;
-   	thread implementation thr_gcs_send_deferred.i
-   	end thr_gcs_send_deferred.i;
-	
-	process process_gcs_send_deferred
-	end process_gcs_send_deferred;
-
-	process implementation process_gcs_send_deferred.i
-		subcomponents
-		thr: thread thr_gcs_send_deferred.i;
-	end process_gcs_send_deferred.i;
-
-
--- gcs_data_stream_send
-
- 	thread thr_gcs_data_stream_send
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 950 ms;
-      Period => 20 Ms;
-    end thr_gcs_data_stream_send;
-   	thread implementation thr_gcs_data_stream_send.i
-   	end thr_gcs_data_stream_send.i;
-	
-	process process_gcs_data_stream_send
-	end process_gcs_data_stream_send;
-
-	process implementation process_gcs_data_stream_send.i
-		subcomponents
-		thr: thread thr_gcs_data_stream_send.i;
-	end process_gcs_data_stream_send.i;
-
-
--- update_mount
-
- 	thread thr_update_mount
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 450 ms;
-      Period => 20 Ms;
-    end thr_update_mount;
-   	thread implementation thr_update_mount.i
-   	end thr_update_mount.i;
-	
-	process process_update_mount
-	end process_update_mount;
-
-	process implementation process_update_mount.i
-		subcomponents
-		thr: thread thr_update_mount.i;
-	end process_update_mount.i;
-
-
--- ten_hz_logging_loop
-
- 	thread thr_ten_hz_logging_loop
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 300 ms;
-      Period => 100 Ms;
-    end thr_ten_hz_logging_loop;
-   	thread implementation thr_ten_hz_logging_loop.i
-   	end thr_ten_hz_logging_loop.i;
-	
-	process process_ten_hz_logging_loop
-	end process_ten_hz_logging_loop;
-
-	process implementation process_ten_hz_logging_loop.i
-		subcomponents
-		thr: thread thr_ten_hz_logging_loop.i;
-	end process_ten_hz_logging_loop.i;
+  c0: port prs_rc_loop.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
+  c1: port prs_rc_loop.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
+  c2: port prs_rc_loop.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c3: port prs_rc_loop.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
+  c4: port prs_rc_loop.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
+  c5: port prs_rc_loop.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c6: port prs_rc_loop.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
+  c7: port prs_rc_loop.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
+  c8: port prs_rc_loop.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c9: port prs_rc_loop.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
+  c10: port prs_rc_loop.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
+  c11: port prs_rc_loop.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c12: port prs_rc_loop.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
+  c13: port prs_rc_loop.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
+  c14: port prs_rc_loop.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c15: port prs_rc_loop.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
+  c16: port prs_rc_loop.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
+  c17: port prs_rc_loop.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c18: port prs_rc_loop.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
+  c19: port prs_rc_loop.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
+  c20: port prs_rc_loop.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c21: port prs_rc_loop.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
+  c22: port prs_rc_loop.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
+  c23: port prs_rc_loop.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c24: port prs_update_batt_compass.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c25: port prs_update_batt_compass.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
+  c26: port prs_update_batt_compass.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c27: port prs_update_batt_compass.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c28: port prs_update_batt_compass.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
+  c29: port prs_update_batt_compass.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c30: port prs_update_batt_compass.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c31: port prs_update_batt_compass.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
+  c32: port prs_update_batt_compass.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c33: port prs_update_batt_compass.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c34: port prs_update_batt_compass.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
+  c35: port prs_update_batt_compass.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c36: port prs_update_batt_compass.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c37: port prs_update_batt_compass.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
+  c38: port prs_update_batt_compass.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c39: port prs_update_batt_compass.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c40: port prs_update_batt_compass.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
+  c41: port prs_update_batt_compass.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c42: port prs_update_batt_compass.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c43: port prs_update_batt_compass.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
+  c44: port prs_update_batt_compass.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c45: port prs_update_batt_compass.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c46: port prs_update_batt_compass.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
+  c47: port prs_update_batt_compass.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c48: port prs_arm_motors_check.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c49: port prs_arm_motors_check.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
+  c50: port prs_arm_motors_check.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
+  c51: port prs_arm_motors_check.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c52: port prs_arm_motors_check.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c53: port prs_arm_motors_check.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
+  c54: port prs_arm_motors_check.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
+  c55: port prs_arm_motors_check.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c56: port prs_arm_motors_check.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c57: port prs_arm_motors_check.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
+  c58: port prs_arm_motors_check.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
+  c59: port prs_arm_motors_check.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c60: port prs_arm_motors_check.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c61: port prs_arm_motors_check.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
+  c62: port prs_arm_motors_check.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
+  c63: port prs_arm_motors_check.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c64: port prs_arm_motors_check.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c65: port prs_arm_motors_check.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
+  c66: port prs_arm_motors_check.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
+  c67: port prs_arm_motors_check.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c68: port prs_arm_motors_check.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c69: port prs_arm_motors_check.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
+  c70: port prs_arm_motors_check.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
+  c71: port prs_arm_motors_check.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c72: port prs_arm_motors_check.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c73: port prs_arm_motors_check.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
+  c74: port prs_arm_motors_check.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
+  c75: port prs_arm_motors_check.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c76: port prs_arm_motors_check.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c77: port prs_arm_motors_check.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
+  c78: port prs_arm_motors_check.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
+  c79: port prs_arm_motors_check.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c80: port prs_run_nav_updates.home_distance   -> prs_three_hz_loop.home_distance; 
+  c81: port prs_three_hz_loop.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c82: port prs_three_hz_loop.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
+  c83: port prs_three_hz_loop.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c84: port prs_three_hz_loop.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c85: port prs_three_hz_loop.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
+  c86: port prs_three_hz_loop.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c87: port prs_three_hz_loop.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c88: port prs_three_hz_loop.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
+  c89: port prs_three_hz_loop.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c90: port prs_three_hz_loop.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c91: port prs_three_hz_loop.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
+  c92: port prs_three_hz_loop.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c93: port prs_three_hz_loop.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c94: port prs_three_hz_loop.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
+  c95: port prs_three_hz_loop.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c96: port prs_three_hz_loop.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c97: port prs_three_hz_loop.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
+  c98: port prs_three_hz_loop.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c99: port prs_three_hz_loop.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c100: port prs_three_hz_loop.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
+  c101: port prs_three_hz_loop.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c102: port prs_three_hz_loop.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c103: port prs_three_hz_loop.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
+  c104: port prs_three_hz_loop.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c105: port prs_crash_check.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c106: port prs_crash_check.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
+  c107: port prs_crash_check.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
+  c108: port prs_crash_check.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c109: port prs_crash_check.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c110: port prs_crash_check.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
+  c111: port prs_crash_check.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
+  c112: port prs_crash_check.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c113: port prs_crash_check.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c114: port prs_crash_check.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
+  c115: port prs_crash_check.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
+  c116: port prs_crash_check.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c117: port prs_crash_check.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c118: port prs_crash_check.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
+  c119: port prs_crash_check.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
+  c120: port prs_crash_check.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c121: port prs_crash_check.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c122: port prs_crash_check.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
+  c123: port prs_crash_check.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
+  c124: port prs_crash_check.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c125: port prs_crash_check.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c126: port prs_crash_check.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
+  c127: port prs_crash_check.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
+  c128: port prs_crash_check.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c129: port prs_crash_check.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c130: port prs_crash_check.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
+  c131: port prs_crash_check.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
+  c132: port prs_crash_check.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c133: port prs_crash_check.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c134: port prs_crash_check.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
+  c135: port prs_crash_check.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
+  c136: port prs_crash_check.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
 
 
--- fifty_hz_logging_loop
-
- 	thread thr_fifty_hz_logging_loop
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 220 ms;
-      Period => 20 Ms;
-    end thr_fifty_hz_logging_loop;
-   	thread implementation thr_fifty_hz_logging_loop.i
-   	end thr_fifty_hz_logging_loop.i;
-	
-	process process_fifty_hz_logging_loop
-	end process_fifty_hz_logging_loop;
-
-	process implementation process_fifty_hz_logging_loop.i
-		subcomponents
-		thr: thread thr_fifty_hz_logging_loop.i;
-	end process_fifty_hz_logging_loop.i;
-	
-	
--- perf_update
-
- 	thread thr_perf_update
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 200 ms;
-      Period => 10000 Ms;
-    end thr_perf_update;
-   	thread implementation thr_perf_update.i
-   	end thr_perf_update.i;
-	
-	process process_perf_update
-	end process_perf_update;
-
-	process implementation process_perf_update.i
-		subcomponents
-		thr: thread thr_perf_update.i;
-	end process_perf_update.i;
-
-
--- read_receiver_rssi
-
- 	thread thr_read_receiver_rssi
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 50 ms;
-      Period => 100 Ms;
-    end thr_read_receiver_rssi;
-   	thread implementation thr_read_receiver_rssi.i
-   	end thr_read_receiver_rssi.i;
-	
-	process process_read_receiver_rssi
-	end process_read_receiver_rssi;
-
-	process implementation process_read_receiver_rssi.i
-		subcomponents
-		thr: thread thr_read_receiver_rssi.i;
-	end process_read_receiver_rssi.i;
-	
-	
--- telemetry_send
-
- 	thread thr_telemetry_send
-   	properties
-      Dispatch_Protocol => Periodic;
-      Compute_Execution_Time => 0 ms .. 100 ms;
-      Period => 200 Ms;
-    end thr_telemetry_send;
-   	thread implementation thr_telemetry_send.i
-   	end thr_telemetry_send.i;
-	
-	process process_telemetry_send
-	end process_telemetry_send;
-
-	process implementation process_telemetry_send.i
-		subcomponents
-		thr: thread thr_telemetry_send.i;
-	end process_telemetry_send.i;
-	
-
-	
-	system implementation APM_2_6.i
-		subcomponents
-			 rc_loop: process process_rc_loop.i;
-			 throttle_loop: process process_throttle_loop.i;
-			 update_GPS: process process_update_GPS.i;
-			 update_batt_compass: process process_update_batt_compass.i;
-			 read_aux_switches: process process_read_aux_switches.i;
-			 arm_motors_check: process process_arm_motors_check.i;
-			 auto_trim: process process_auto_trim.i;
-			 update_altitude: process process_update_altitude.i;
-			 run_nav_updates: process process_run_nav_updates.i;
-			 update_thr_cruise: process process_update_thr_cruise.i;
-			 three_hz_loop: process process_three_hz_loop.i;
-			 compass_accumulate: process process_compass_accumulate.i;
-			 barometer_accumulate: process process_barometer_accumulate.i;
-			 update_notify: process process_update_notify.i;
-			 one_hz_loop: process process_one_hz_loop.i;
-			 ekf_dcm_check: process process_ekf_dcm_check.i;
-			 crash_check: process process_crash_check.i;
-			 gcs_check_input: process process_gcs_check_input.i;
-			 gcs_send_heartbeat: process process_gcs_send_heartbeat.i;
-			 gcs_send_deferred: process process_gcs_send_deferred.i;
-			 gcs_data_stream_send: process process_gcs_data_stream_send.i;
-			 update_mount: process process_update_mount.i;
-			 ten_hz_logging_loop: process process_ten_hz_logging_loop.i;
-			 fifty_hz_logging_loop: process process_fifty_hz_logging_loop.i;
-			 perf_update: process process_perf_update.i;
-			 read_receiver_rssi: process process_read_receiver_rssi.i;
-			 telemetry_send: process process_telemetry_send.i;		 
-	end APM_2_6.i;
-	
-end apm_system;
+end APM_2_6.i; 
+ 
+end apm_system; 
