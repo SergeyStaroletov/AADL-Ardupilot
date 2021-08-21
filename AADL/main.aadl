@@ -16,6 +16,8 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
+ g_throttle_cruise    :  in out data port poklib::float; 
 properties 
   Dispatch_Protocol => Periodic; 
   Compute_Execution_Time => 0 ms .. 10 ms; 
@@ -34,6 +36,8 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
+ g_throttle_cruise    :  in out data port poklib::float; 
 end process_rc_loop; 
  
 process implementation process_rc_loop.i  
@@ -48,12 +52,16 @@ connections
  p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
  p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
  p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+ p8: port thr.ap_land_complete    -> ap_land_complete; 
+ p9: port thr.g_throttle_cruise    -> g_throttle_cruise; 
 end process_rc_loop.i; 
 
  
 -- throttle_loop 
 
 thread thr_throttle_loop 
+features 
+ ap_land_complete    :  in out data port poklib::float; 
 properties 
   Dispatch_Protocol => Periodic; 
   Compute_Execution_Time => 0 ms .. 45 ms; 
@@ -63,11 +71,15 @@ thread implementation thr_throttle_loop.i
 end thr_throttle_loop.i; 
  
 process process_throttle_loop 
+features 
+ ap_land_complete    :  in out data port poklib::float; 
 end process_throttle_loop; 
  
 process implementation process_throttle_loop.i  
 subcomponents 
 thr: thread thr_throttle_loop.i; 
+connections 
+ p0: port thr.ap_land_complete    -> ap_land_complete; 
 end process_throttle_loop.i; 
 
  
@@ -103,6 +115,8 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
+ g_throttle_cruise    :  in out data port poklib::float; 
 properties 
   Dispatch_Protocol => Periodic; 
   Compute_Execution_Time => 0 ms .. 72 ms; 
@@ -121,6 +135,8 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
+ g_throttle_cruise    :  in out data port poklib::float; 
 end process_update_batt_compass; 
  
 process implementation process_update_batt_compass.i  
@@ -135,6 +151,8 @@ connections
  p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
  p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
  p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+ p8: port thr.ap_land_complete    -> ap_land_complete; 
+ p9: port thr.g_throttle_cruise    -> g_throttle_cruise; 
 end process_update_batt_compass.i; 
 
  
@@ -150,6 +168,7 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
 properties 
   Dispatch_Protocol => Periodic; 
   Compute_Execution_Time => 0 ms .. 5 ms; 
@@ -168,6 +187,7 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
 end process_arm_motors_check; 
  
 process implementation process_arm_motors_check.i  
@@ -182,6 +202,7 @@ connections
  p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
  p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
  p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+ p8: port thr.ap_land_complete    -> ap_land_complete; 
 end process_arm_motors_check.i; 
 
  
@@ -254,6 +275,8 @@ end process_run_nav_updates.i;
 -- update_thr_cruise 
 
 thread thr_update_thr_cruise 
+features 
+ g_throttle_cruise    :  in out data port poklib::float; 
 properties 
   Dispatch_Protocol => Periodic; 
   Compute_Execution_Time => 0 ms .. 80 ms; 
@@ -263,11 +286,15 @@ thread implementation thr_update_thr_cruise.i
 end thr_update_thr_cruise.i; 
  
 process process_update_thr_cruise 
+features 
+ g_throttle_cruise    :  in out data port poklib::float; 
 end process_update_thr_cruise; 
  
 process implementation process_update_thr_cruise.i  
 subcomponents 
 thr: thread thr_update_thr_cruise.i; 
+connections 
+ p0: port thr.g_throttle_cruise    -> g_throttle_cruise; 
 end process_update_thr_cruise.i; 
 
  
@@ -283,7 +310,9 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
  home_distance    :  in out data port poklib::float; 
+ g_throttle_cruise    :  in out data port poklib::float; 
 properties 
   Dispatch_Protocol => Periodic; 
   Compute_Execution_Time => 0 ms .. 10 ms; 
@@ -302,7 +331,9 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
  home_distance    :  in out data port poklib::float; 
+ g_throttle_cruise    :  in out data port poklib::float; 
 end process_three_hz_loop; 
  
 process implementation process_three_hz_loop.i  
@@ -317,7 +348,9 @@ connections
  p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
  p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
  p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
- p8: port thr.home_distance    -> home_distance; 
+ p8: port thr.ap_land_complete    -> ap_land_complete; 
+ p9: port thr.home_distance    -> home_distance; 
+ p10: port thr.g_throttle_cruise    -> g_throttle_cruise; 
 end process_three_hz_loop.i; 
 
  
@@ -405,6 +438,7 @@ end process_one_hz_loop.i;
 
 thread thr_ekf_dcm_check 
 features 
+ g_throttle_cruise    :  in out data port poklib::float; 
  orig_roll_rp    :  in out data port poklib::float; 
  orig_roll_ri    :  in out data port poklib::float; 
  orig_roll_rd    :  in out data port poklib::float; 
@@ -423,6 +457,7 @@ end thr_ekf_dcm_check.i;
  
 process process_ekf_dcm_check 
 features 
+ g_throttle_cruise    :  in out data port poklib::float; 
  orig_roll_rp    :  in out data port poklib::float; 
  orig_roll_ri    :  in out data port poklib::float; 
  orig_roll_rd    :  in out data port poklib::float; 
@@ -437,14 +472,15 @@ process implementation process_ekf_dcm_check.i
 subcomponents 
 thr: thread thr_ekf_dcm_check.i; 
 connections 
- p0: port thr.orig_roll_rp    -> orig_roll_rp; 
- p1: port thr.orig_roll_ri    -> orig_roll_ri; 
- p2: port thr.orig_roll_rd    -> orig_roll_rd; 
- p3: port thr.orig_roll_sp    -> orig_roll_sp; 
- p4: port thr.orig_pitch_rp    -> orig_pitch_rp; 
- p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
- p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
- p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+ p0: port thr.g_throttle_cruise    -> g_throttle_cruise; 
+ p1: port thr.orig_roll_rp    -> orig_roll_rp; 
+ p2: port thr.orig_roll_ri    -> orig_roll_ri; 
+ p3: port thr.orig_roll_rd    -> orig_roll_rd; 
+ p4: port thr.orig_roll_sp    -> orig_roll_sp; 
+ p5: port thr.orig_pitch_rp    -> orig_pitch_rp; 
+ p6: port thr.orig_pitch_ri    -> orig_pitch_ri; 
+ p7: port thr.orig_pitch_rd    -> orig_pitch_rd; 
+ p8: port thr.orig_pitch_sp    -> orig_pitch_sp; 
 end process_ekf_dcm_check.i; 
 
  
@@ -460,6 +496,7 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
 properties 
   Dispatch_Protocol => Periodic; 
   Compute_Execution_Time => 0 ms .. 2 ms; 
@@ -478,6 +515,7 @@ features
  orig_pitch_ri    :  in out data port poklib::float; 
  orig_pitch_rd    :  in out data port poklib::float; 
  orig_pitch_sp    :  in out data port poklib::float; 
+ ap_land_complete    :  in out data port poklib::float; 
 end process_crash_check; 
  
 process implementation process_crash_check.i  
@@ -492,6 +530,7 @@ connections
  p5: port thr.orig_pitch_ri    -> orig_pitch_ri; 
  p6: port thr.orig_pitch_rd    -> orig_pitch_rd; 
  p7: port thr.orig_pitch_sp    -> orig_pitch_sp; 
+ p8: port thr.ap_land_complete    -> ap_land_complete; 
 end process_crash_check.i; 
 
  
@@ -724,7 +763,6 @@ prs_perf_update        : process   process_perf_update.i;
 prs_read_receiver_rssi        : process   process_read_receiver_rssi.i; 
 prs_telemetry_send        : process   process_telemetry_send.i; 
 connections 
-
   c0: port prs_rc_loop.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
   c1: port prs_rc_loop.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
   c2: port prs_rc_loop.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
@@ -749,121 +787,128 @@ connections
   c21: port prs_rc_loop.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
   c22: port prs_rc_loop.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
   c23: port prs_rc_loop.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
-  c24: port prs_update_batt_compass.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
-  c25: port prs_update_batt_compass.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
-  c26: port prs_update_batt_compass.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
-  c27: port prs_update_batt_compass.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
-  c28: port prs_update_batt_compass.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
-  c29: port prs_update_batt_compass.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
-  c30: port prs_update_batt_compass.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
-  c31: port prs_update_batt_compass.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
-  c32: port prs_update_batt_compass.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
-  c33: port prs_update_batt_compass.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
-  c34: port prs_update_batt_compass.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
-  c35: port prs_update_batt_compass.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
-  c36: port prs_update_batt_compass.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
-  c37: port prs_update_batt_compass.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
-  c38: port prs_update_batt_compass.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
-  c39: port prs_update_batt_compass.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
-  c40: port prs_update_batt_compass.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
-  c41: port prs_update_batt_compass.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
-  c42: port prs_update_batt_compass.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
-  c43: port prs_update_batt_compass.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
-  c44: port prs_update_batt_compass.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
-  c45: port prs_update_batt_compass.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
-  c46: port prs_update_batt_compass.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
-  c47: port prs_update_batt_compass.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
-  c48: port prs_arm_motors_check.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
-  c49: port prs_arm_motors_check.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
-  c50: port prs_arm_motors_check.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
-  c51: port prs_arm_motors_check.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
-  c52: port prs_arm_motors_check.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
-  c53: port prs_arm_motors_check.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
-  c54: port prs_arm_motors_check.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
-  c55: port prs_arm_motors_check.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
-  c56: port prs_arm_motors_check.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
-  c57: port prs_arm_motors_check.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
-  c58: port prs_arm_motors_check.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
-  c59: port prs_arm_motors_check.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
-  c60: port prs_arm_motors_check.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
-  c61: port prs_arm_motors_check.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
-  c62: port prs_arm_motors_check.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
-  c63: port prs_arm_motors_check.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
-  c64: port prs_arm_motors_check.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
-  c65: port prs_arm_motors_check.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
-  c66: port prs_arm_motors_check.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
-  c67: port prs_arm_motors_check.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
-  c68: port prs_arm_motors_check.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
-  c69: port prs_arm_motors_check.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
-  c70: port prs_arm_motors_check.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
-  c71: port prs_arm_motors_check.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
-  c72: port prs_arm_motors_check.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
-  c73: port prs_arm_motors_check.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
-  c74: port prs_arm_motors_check.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
-  c75: port prs_arm_motors_check.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
-  c76: port prs_arm_motors_check.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
-  c77: port prs_arm_motors_check.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
-  c78: port prs_arm_motors_check.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
-  c79: port prs_arm_motors_check.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
-  c80: port prs_run_nav_updates.home_distance   -> prs_three_hz_loop.home_distance; 
-  c81: port prs_three_hz_loop.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
-  c82: port prs_three_hz_loop.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
-  c83: port prs_three_hz_loop.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
-  c84: port prs_three_hz_loop.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
-  c85: port prs_three_hz_loop.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
-  c86: port prs_three_hz_loop.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
-  c87: port prs_three_hz_loop.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
-  c88: port prs_three_hz_loop.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
-  c89: port prs_three_hz_loop.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
-  c90: port prs_three_hz_loop.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
-  c91: port prs_three_hz_loop.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
-  c92: port prs_three_hz_loop.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
-  c93: port prs_three_hz_loop.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
-  c94: port prs_three_hz_loop.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
-  c95: port prs_three_hz_loop.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
-  c96: port prs_three_hz_loop.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
-  c97: port prs_three_hz_loop.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
-  c98: port prs_three_hz_loop.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
-  c99: port prs_three_hz_loop.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
-  c100: port prs_three_hz_loop.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
-  c101: port prs_three_hz_loop.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
-  c102: port prs_three_hz_loop.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
-  c103: port prs_three_hz_loop.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
-  c104: port prs_three_hz_loop.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
-  c105: port prs_crash_check.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
-  c106: port prs_crash_check.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
-  c107: port prs_crash_check.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
-  c108: port prs_crash_check.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
-  c109: port prs_crash_check.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
-  c110: port prs_crash_check.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
-  c111: port prs_crash_check.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
-  c112: port prs_crash_check.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
-  c113: port prs_crash_check.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
-  c114: port prs_crash_check.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
-  c115: port prs_crash_check.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
-  c116: port prs_crash_check.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
-  c117: port prs_crash_check.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
-  c118: port prs_crash_check.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
-  c119: port prs_crash_check.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
-  c120: port prs_crash_check.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
-  c121: port prs_crash_check.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
-  c122: port prs_crash_check.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
-  c123: port prs_crash_check.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
-  c124: port prs_crash_check.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
-  c125: port prs_crash_check.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
-  c126: port prs_crash_check.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
-  c127: port prs_crash_check.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
-  c128: port prs_crash_check.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
-  c129: port prs_crash_check.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
-  c130: port prs_crash_check.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
-  c131: port prs_crash_check.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
-  c132: port prs_crash_check.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
-  c133: port prs_crash_check.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
-  c134: port prs_crash_check.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
-  c135: port prs_crash_check.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
-  c136: port prs_crash_check.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
-
-
+  c24: port prs_rc_loop.ap_land_complete   -> prs_throttle_loop.ap_land_complete; 
+  c25: port prs_update_batt_compass.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c26: port prs_update_batt_compass.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
+  c27: port prs_update_batt_compass.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c28: port prs_update_batt_compass.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c29: port prs_update_batt_compass.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
+  c30: port prs_update_batt_compass.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c31: port prs_update_batt_compass.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c32: port prs_update_batt_compass.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
+  c33: port prs_update_batt_compass.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c34: port prs_update_batt_compass.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c35: port prs_update_batt_compass.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
+  c36: port prs_update_batt_compass.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c37: port prs_update_batt_compass.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c38: port prs_update_batt_compass.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
+  c39: port prs_update_batt_compass.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c40: port prs_update_batt_compass.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c41: port prs_update_batt_compass.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
+  c42: port prs_update_batt_compass.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c43: port prs_update_batt_compass.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c44: port prs_update_batt_compass.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
+  c45: port prs_update_batt_compass.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c46: port prs_update_batt_compass.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c47: port prs_update_batt_compass.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
+  c48: port prs_update_batt_compass.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c49: port prs_update_batt_compass.ap_land_complete   -> prs_throttle_loop.ap_land_complete; 
+  c50: port prs_arm_motors_check.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c51: port prs_arm_motors_check.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
+  c52: port prs_arm_motors_check.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
+  c53: port prs_arm_motors_check.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c54: port prs_arm_motors_check.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c55: port prs_arm_motors_check.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
+  c56: port prs_arm_motors_check.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
+  c57: port prs_arm_motors_check.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c58: port prs_arm_motors_check.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c59: port prs_arm_motors_check.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
+  c60: port prs_arm_motors_check.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
+  c61: port prs_arm_motors_check.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c62: port prs_arm_motors_check.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c63: port prs_arm_motors_check.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
+  c64: port prs_arm_motors_check.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
+  c65: port prs_arm_motors_check.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c66: port prs_arm_motors_check.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c67: port prs_arm_motors_check.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
+  c68: port prs_arm_motors_check.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
+  c69: port prs_arm_motors_check.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c70: port prs_arm_motors_check.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c71: port prs_arm_motors_check.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
+  c72: port prs_arm_motors_check.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
+  c73: port prs_arm_motors_check.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c74: port prs_arm_motors_check.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c75: port prs_arm_motors_check.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
+  c76: port prs_arm_motors_check.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
+  c77: port prs_arm_motors_check.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c78: port prs_arm_motors_check.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c79: port prs_arm_motors_check.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
+  c80: port prs_arm_motors_check.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
+  c81: port prs_arm_motors_check.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c82: port prs_arm_motors_check.ap_land_complete   -> prs_throttle_loop.ap_land_complete; 
+  c83: port prs_run_nav_updates.home_distance   -> prs_three_hz_loop.home_distance; 
+  c84: port prs_update_thr_cruise.g_throttle_cruise   -> prs_rc_loop.g_throttle_cruise; 
+  c85: port prs_update_thr_cruise.g_throttle_cruise   -> prs_update_batt_compass.g_throttle_cruise; 
+  c86: port prs_update_thr_cruise.g_throttle_cruise   -> prs_three_hz_loop.g_throttle_cruise; 
+  c87: port prs_update_thr_cruise.g_throttle_cruise   -> prs_ekf_dcm_check.g_throttle_cruise; 
+  c88: port prs_three_hz_loop.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c89: port prs_three_hz_loop.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
+  c90: port prs_three_hz_loop.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c91: port prs_three_hz_loop.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c92: port prs_three_hz_loop.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
+  c93: port prs_three_hz_loop.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c94: port prs_three_hz_loop.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c95: port prs_three_hz_loop.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
+  c96: port prs_three_hz_loop.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c97: port prs_three_hz_loop.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c98: port prs_three_hz_loop.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
+  c99: port prs_three_hz_loop.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c100: port prs_three_hz_loop.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c101: port prs_three_hz_loop.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
+  c102: port prs_three_hz_loop.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c103: port prs_three_hz_loop.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c104: port prs_three_hz_loop.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
+  c105: port prs_three_hz_loop.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c106: port prs_three_hz_loop.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c107: port prs_three_hz_loop.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
+  c108: port prs_three_hz_loop.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c109: port prs_three_hz_loop.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c110: port prs_three_hz_loop.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
+  c111: port prs_three_hz_loop.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c112: port prs_three_hz_loop.ap_land_complete   -> prs_throttle_loop.ap_land_complete; 
+  c113: port prs_crash_check.orig_roll_rp   -> prs_rc_loop.orig_roll_rp; 
+  c114: port prs_crash_check.orig_roll_rp   -> prs_update_batt_compass.orig_roll_rp; 
+  c115: port prs_crash_check.orig_roll_rp   -> prs_three_hz_loop.orig_roll_rp; 
+  c116: port prs_crash_check.orig_roll_rp   -> prs_ekf_dcm_check.orig_roll_rp; 
+  c117: port prs_crash_check.orig_roll_ri   -> prs_rc_loop.orig_roll_ri; 
+  c118: port prs_crash_check.orig_roll_ri   -> prs_update_batt_compass.orig_roll_ri; 
+  c119: port prs_crash_check.orig_roll_ri   -> prs_three_hz_loop.orig_roll_ri; 
+  c120: port prs_crash_check.orig_roll_ri   -> prs_ekf_dcm_check.orig_roll_ri; 
+  c121: port prs_crash_check.orig_roll_rd   -> prs_rc_loop.orig_roll_rd; 
+  c122: port prs_crash_check.orig_roll_rd   -> prs_update_batt_compass.orig_roll_rd; 
+  c123: port prs_crash_check.orig_roll_rd   -> prs_three_hz_loop.orig_roll_rd; 
+  c124: port prs_crash_check.orig_roll_rd   -> prs_ekf_dcm_check.orig_roll_rd; 
+  c125: port prs_crash_check.orig_roll_sp   -> prs_rc_loop.orig_roll_sp; 
+  c126: port prs_crash_check.orig_roll_sp   -> prs_update_batt_compass.orig_roll_sp; 
+  c127: port prs_crash_check.orig_roll_sp   -> prs_three_hz_loop.orig_roll_sp; 
+  c128: port prs_crash_check.orig_roll_sp   -> prs_ekf_dcm_check.orig_roll_sp; 
+  c129: port prs_crash_check.orig_pitch_rp   -> prs_rc_loop.orig_pitch_rp; 
+  c130: port prs_crash_check.orig_pitch_rp   -> prs_update_batt_compass.orig_pitch_rp; 
+  c131: port prs_crash_check.orig_pitch_rp   -> prs_three_hz_loop.orig_pitch_rp; 
+  c132: port prs_crash_check.orig_pitch_rp   -> prs_ekf_dcm_check.orig_pitch_rp; 
+  c133: port prs_crash_check.orig_pitch_ri   -> prs_rc_loop.orig_pitch_ri; 
+  c134: port prs_crash_check.orig_pitch_ri   -> prs_update_batt_compass.orig_pitch_ri; 
+  c135: port prs_crash_check.orig_pitch_ri   -> prs_three_hz_loop.orig_pitch_ri; 
+  c136: port prs_crash_check.orig_pitch_ri   -> prs_ekf_dcm_check.orig_pitch_ri; 
+  c137: port prs_crash_check.orig_pitch_rd   -> prs_rc_loop.orig_pitch_rd; 
+  c138: port prs_crash_check.orig_pitch_rd   -> prs_update_batt_compass.orig_pitch_rd; 
+  c139: port prs_crash_check.orig_pitch_rd   -> prs_three_hz_loop.orig_pitch_rd; 
+  c140: port prs_crash_check.orig_pitch_rd   -> prs_ekf_dcm_check.orig_pitch_rd; 
+  c141: port prs_crash_check.orig_pitch_sp   -> prs_rc_loop.orig_pitch_sp; 
+  c142: port prs_crash_check.orig_pitch_sp   -> prs_update_batt_compass.orig_pitch_sp; 
+  c143: port prs_crash_check.orig_pitch_sp   -> prs_three_hz_loop.orig_pitch_sp; 
+  c144: port prs_crash_check.orig_pitch_sp   -> prs_ekf_dcm_check.orig_pitch_sp; 
+  c145: port prs_crash_check.ap_land_complete   -> prs_throttle_loop.ap_land_complete; 
 end APM_2_6.i; 
  
 end apm_system; 
