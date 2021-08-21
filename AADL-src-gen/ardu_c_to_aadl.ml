@@ -196,7 +196,7 @@ List.iter (
                     match g with
                       Some(fg) -> if not (List.mem fg !fg_to_visit) then
                         begin
-                          fg_to_visit:=!fg_to_visit @[fg];
+                          fg_to_visit := !fg_to_visit @[fg];
                           Printf.printf "[fun] added fun %s to list\n" nam 
                         end
                       | _ -> ()
@@ -208,13 +208,24 @@ List.iter (
                     match Ast_c.unwrap2 ar with Left argu-> scan_expression argu
                     | _ -> ()
                   ) arg)
-              | Ast_c.Ident(Ast_c.RegularName nam) -> 
+              | Ast_c.Ident(Ast_c.RegularName nam) -> (  (* R-VALUE *)
                 let nam = Ast_c.unwrap nam in
                 if not(List.mem nam !var_get) then 
                   var_get := !var_get @ [nam];
+                Printf.printf "[IDENT in the right part!!] %s\n" nam)
+              | Ast_c.RecordAccess(ep, nam) -> (
+                let (nam, _) = Ast_c.get_s_and_ii_of_name nam in 
 
-                Printf.printf "[IDENT in the right part!!] %s\n" nam
-               | _ -> ()
+                let ep = Ast_c.unwrap ep in
+                let x = match ep with
+                      (Ast_c.Ident(nam_id),_) -> let (n_id, _) = Ast_c.get_s_and_ii_of_name nam_id in n_id
+                      | _ -> "?" in
+                let nam = x ^ "_" ^ nam in
+                if not(List.mem nam !var_get) then 
+                  var_get := !var_get @ [nam];
+                Printf.printf "[IDENT prt access in the right part!!] %s\n" nam
+              ) 
+              | _ -> ()
             in
 
           (* processing code *)
@@ -226,13 +237,22 @@ List.iter (
               let (e, ebis) = b in
               match e with
                 Some((Ast_c.Assignment (a1,a2,a3),_),_) -> (
-                  Printf.printf "[assignment!]\n";
+                  Printf.printf "[assignment!] %s\n" (Dumper.dump a1); (* L-VALUE *)
                   match a1 with
-                  ((Ast_c.Ident(nam),_),_) -> 
+                  ((Ast_c.Ident(nam),_),_) -> (
                     let (nam, _) = Ast_c.get_s_and_ii_of_name nam in 
                     if not(List.mem nam !var_set) then 
                       var_set := !var_set @ [nam];
-                    Printf.printf "NAM = %s\n" nam
+                    Printf.printf "NAM = %s\n" nam)
+                  | ((Ast_c.RecordAccess(ep,nam),_),_) -> (
+                    let x = match ep with
+                      ((Ast_c.Ident(nam_id),_),_)  -> let (n_id, _) = Ast_c.get_s_and_ii_of_name nam_id in n_id
+                      | _ -> "?" in
+                    let (nam, _) = Ast_c.get_s_and_ii_of_name nam in 
+                    let nam = x ^ "_" ^ nam in
+                    if not(List.mem nam !var_set) then 
+                      var_set := !var_set @ [nam];
+                    Printf.printf "NAM2 = %s\n" nam)
                   | _ -> ();
                   scan_expression a3
                 )
